@@ -20,7 +20,6 @@ func NewNewCmd(templatesFS embed.FS) *cobra.Command {
 	var useCurrentDirName bool
 	var name string
 
-	// Dynamically fetch allowed languages for the `new` command
 	allowedLanguages := registry.GetAllowedLanguages("new")
 	allowedLanguagesText := strings.Join(allowedLanguages, ", ")
 
@@ -29,7 +28,7 @@ func NewNewCmd(templatesFS embed.FS) *cobra.Command {
 		Short: "Create a new project",
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) < 1 {
-				return fmt.Errorf("missing required argument: <language>.\nSupported languages are: %v\n",
+				return fmt.Errorf("missing required argument: <language>.\nSupported languages are: %v",
 					allowedLanguagesText)
 			}
 			if len(args) > 1 {
@@ -46,16 +45,21 @@ func NewNewCmd(templatesFS embed.FS) *cobra.Command {
 			}
 
 			if name == "" && !useCurrentDirName {
-				return fmt.Errorf("Run 'craft new <language>' with either --name <name> or --current-dir-name (-c) to specify the project name.")
+				return fmt.Errorf("Run 'craft new <language>' with either --name <name> (-n <name>) or --current-dir-name (-c) to specify the project name.")
 			}
 
 			createDirectoryFor, projectName := getProjectDetails(useCurrentDirName, name)
-			handler, err := handlers.GetNewHandler(language)
+
+			languageStrings := strings.Split(strings.ToLower(language), "-")
+			handler, err := handlers.GetNewHandler(languageStrings)
 			if err != nil {
 				return err
 			}
 			handler.SetTemplatesFS(&templatesFS)
-			handler.Run(createDirectoryFor, projectName)
+			err = handler.Run(createDirectoryFor, projectName)
+			if err != nil {
+				return err
+			}
 
 			return nil
 		},

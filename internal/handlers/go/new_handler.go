@@ -16,8 +16,8 @@ type NewGoHandler struct {
 	TemplatesFS fs.FS
 }
 
-func (h *NewGoHandler) SetTemplatesFS(fs fs.FS) {
-	h.TemplatesFS = fs
+func (handler *NewGoHandler) SetTemplatesFS(fs fs.FS) {
+	handler.TemplatesFS = fs
 }
 
 const (

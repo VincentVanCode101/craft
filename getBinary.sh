@@ -1,15 +1,15 @@
 #!/bin/bash
 #
-# Script to extract the craft-native binary from a built Docker image,
+# Script to extract the craft binary from a built Docker image,
 # copy it to the project directory, and create a symlink in /usr/local/bin.
 
 set -e  # Exit on any error
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly IMAGE_NAME="craft-exec:latest"
-readonly BINARY_NAME="craft-native"
+readonly BINARY_NAME="craft"
 readonly LOCAL_BIN="/usr/local/bin"
-readonly SYMLINK_NAME="craft-nativ"
+readonly SYMLINK_NAME="craft"
 
 # Load utility functions
 source "$SCRIPT_DIR/utils.sh"
@@ -58,7 +58,7 @@ main() {
   local binary_path="$SCRIPT_DIR/$BINARY_NAME"
   local container_id
   container_id=$(docker create "$IMAGE_NAME")
-  docker cp "${container_id}:/usr/local/bin/${BINARY_NAME}" "$binary_path"
+  docker cp "${container_id}:/app/${BINARY_NAME}" "$binary_path"
   docker rm "${container_id}"
 
   log "INFO" "Binary extracted to $binary_path"
