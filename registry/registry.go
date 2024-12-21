@@ -8,7 +8,7 @@ import (
 
 var (
 	AllowedOperationsWithLanguages = map[string][]string{
-		"new": {"java", "go"},
+		"new": {"java", "go", "rust"},
 	}
 )
 

@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/fs"
 	"os"
+	"os/exec"
 	"path"
 	"path/filepath"
 	"regexp"
@@ -296,6 +297,32 @@ func TrimFileSuffix(filePaths []string, projectHostDir, suffix string) error {
 		if err := os.Rename(hostFilePath, cleanedFilePath); err != nil {
 			return fmt.Errorf("error removing suffix %v in %v: %v", suffix, hostFilePath, err)
 		}
+	}
+	return nil
+}
+
+// ExecuteScript executes a script with the provided arguments in the specified directory.
+// It sets the required permissions on the script before execution.
+// Arguments:
+//
+//	scriptPath: Path to the script file
+//	workingDir: Directory where the script should be executed
+//	args: Arguments to pass to the script
+func ExecuteScript(scriptPath, workingDir string, args ...string) error {
+	// Set execute permissions on the script
+	if err := os.Chmod(scriptPath, 0771); err != nil {
+		return fmt.Errorf("error setting execute permissions on script: %v", err)
+	}
+
+	// Prepare the command for execution
+	execCmd := exec.Command(scriptPath, args...)
+	execCmd.Stdout = os.Stdout
+	execCmd.Stderr = os.Stderr
+	execCmd.Dir = workingDir
+
+	// Run the command
+	if err := execCmd.Run(); err != nil {
+		return fmt.Errorf("error executing script: %v", err)
 	}
 	return nil
 }

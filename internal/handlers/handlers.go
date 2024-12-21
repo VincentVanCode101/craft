@@ -4,6 +4,7 @@ import (
 	"craft/internal/common"
 	gohandler "craft/internal/handlers/go"
 	javahandler "craft/internal/handlers/java"
+	rusthandler "craft/internal/handlers/rust"
 	"fmt"
 	"strings"
 )
@@ -21,6 +22,13 @@ func GetNewHandler(language string, dependencies []string) (common.NewHandler, e
 			Language:     "go",
 			Dependencies: dependencies,
 		}, nil
+
+	case "rust":
+		return &rusthandler.NewRustHandler{
+			Language:     "rust",
+			Dependencies: dependencies,
+		}, nil
+
 	default:
 		return nil, fmt.Errorf("no 'new' handler found for language '%s'", language)
 	}

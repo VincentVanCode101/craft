@@ -1,7 +1,7 @@
 # Makefile for managing Rust workflows inside a Docker container
 
 # Application and paths
-APP_NAME := my_rust_app
+APP_NAME := {PROJECT_NAME}
 SRC_DIR := src
 BUILD_DIR := target
 BIN_PATH := $(BUILD_DIR)/release/$(APP_NAME)
