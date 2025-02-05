@@ -24,7 +24,6 @@ See how `Craft` solves the [problems of other scaffolding tools](#️-problems-w
 - [Installation](#-installation)
 - [Command Line Usage](#-command-line-usage)
   - [Creating New Projects](#1-creating-new-projects)
-  - [Inspecting Supported Operations](#2-inspecting-supported-operations)
 - [Supported Languages](#supported-languages)
 - [License](#license)
 
@@ -58,9 +57,6 @@ These problems slow down productivity, create barriers for quickly experimenting
   - Automatically creates a new directory named `craft-<language>` for every project.
   - Specify dependencies for projects using the `--dependencies` flag.
 
-- **Inspection** (`inspect` command):
-  - View all allowed operations and their supported language/framework combinations.
-
 - **Docker-Ready**:
   - Generated and updated projects are pre-configured to run in Docker containers.
 
@@ -74,11 +70,12 @@ These problems slow down productivity, create barriers for quickly experimenting
    cd craft-bash-rewrite
    ```
 
-2. Build the binary:
+2. Install the binary:
    ```bash
-   ./getBinary.sh
+   ./install.sh
    ```
-  - the binary is automatically added to `/usr/local/bin/craft`
+  - Linux: the binary is automatically added to `/usr/local/bin/craft`
+  - MacOS: the binary is automatically added to `/opt/homebrew/bin/craft`
 ---
 
 
@@ -117,6 +114,10 @@ craft new <language>
    ```
 
 4. Show dependencies for the language `java`  
+   ```bash
+   craft new java --show-dependencies
+   ```
+
    Example output:
    ```
    Maven is the default build-tool for the java projects:
@@ -131,26 +132,14 @@ craft new <language>
    ```bash
    craft new --help
    ```
+   or
+
+   ```bash
+   craft new <languae> --help
+   ```
 
 ---
 
-### 2. Inspecting Supported Operations
-
-View all allowed operations and their supported languages/framework combinations:
-```bash
-craft inspect
-```
-Example output:
-```
-Allowed Operations and Languages:
-- Operation: New
-  * Language: Java
-    Run 'craft new java --help' to see the available dependencies.
-  * Language: Go
-    Run 'craft new go --help' to see the available dependencies.
-```
-
----
 
 # 🌐Supported Languages
 
