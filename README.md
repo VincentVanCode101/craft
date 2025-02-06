@@ -210,7 +210,8 @@ craft new <language>
    ```bash
    craft new rust --path=my-rust-project
    ```
----
+
+</details>
 
 ## **📜License**
 
