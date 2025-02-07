@@ -18,23 +18,22 @@ source "$SCRIPT_DIR/utils.sh"
 source "$SCRIPT_DIR/logger.sh"
 source "$SCRIPT_DIR/usage.sh"
 source "$SCRIPT_DIR/new_command.sh"
-source "$SCRIPT_DIR/inspect_command.sh"
 
-setup_colors
+logger::setup_colors
 
-need_cmd "docker"
-need_cmd "curl"
-need_cmd "unzip"
+utils::need_cmd "docker"
+utils::need_cmd "curl"
+utils::need_cmd "unzip"
 
 main() {
 
-    [ $# -eq 0 ] && usage
-    [[ "$1" == "-h" || "$1" == "--help" ]] && usage
+    [ $# -eq 0 ] && usage::general
+    [[ "$1" == "-h" || "$1" == "--help" ]] && usage::general
 
     case "$1" in
     new)
         shift
-        handle_new_command "$@"
+        new_command::handle_new_command "$@"
         ;;
     *)
         echo "Error: Invalid option or command."

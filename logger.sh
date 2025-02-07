@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# logger.sh
 
 #-------------------------------------------------------------
 # SETUP COLORS CONFIGURATION
@@ -11,7 +12,7 @@
 #   This function should be called at the beginning of the
 #   script to set up color configurations.
 #-------------------------------------------------------------
-setup_colors() {
+logger::setup_colors() {
     if [[ -t 2 ]] && [[ -z "${NO_COLOR-}" ]] && [[ "${TERM-}" != "dumb" ]]; then
         COLOR_RESET='\033[0m' # Reset text format
         RED='\033[0;31m'      # Red color

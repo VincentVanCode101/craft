@@ -1,22 +1,24 @@
 #!/usr/bin/env bash
+# languages.sh
 
-export AVAILABLE_LANGUAGES=("go" "java")
+export AVAILABLE_LANGUAGES=("go" "java" "rust")
 
-GO_DEPENDENCIES=("ncurs")
+GO_DEPENDENCIES=("")
 JAVA_DEPENDENCIES=("")
 
-export ALLOWED_LEVELS_go="build"
-export ALLOWED_LEVELS_java="build prod"
+export ALLOWED_LEVELS_go=""
+export ALLOWED_LEVELS_java=""
+export ALLOWED_LEVELS_rust=""
 
 # -----------------------------------------------------------------------------
 # ---------------------------- LANGUAGES --------------------------------------
 # -----------------------------------------------------------------------------
 
-print_available_languages() {
+languages::print_available() {
     echo "${AVAILABLE_LANGUAGES[*]}" | tr ' ' ', '
 }
 
-validate_language() {
+languages::validate() {
     local lang="$1"
     lang=$(echo "$lang" | tr '[:upper:]' '[:lower:]')
 
@@ -30,7 +32,7 @@ validate_language() {
     if [ "$lang_is_available" = false ]; then
         echo "Language '$lang' is not supported."
         echo "Supported languages are:"
-        print_available_languages
+        languages::print_available
         exit 1
     fi
 }
@@ -40,7 +42,7 @@ validate_language() {
 # -----------------------------------------------------------------------------
 
 # Returns the allowed dependencies for the given language
-get_allowed_dependencies_for_language() {
+languages::get_allowed_dependencies() {
     local lang
     lang=$(echo "$1" | tr '[:upper:]' '[:lower:]')
     case "$lang" in
@@ -51,7 +53,7 @@ get_allowed_dependencies_for_language() {
     esac
 }
 
-validate_dependencies() {
+languages::validate_dependencies() {
     local language="$1"
     local dep_string="$2"
     local allowed_deps_str
@@ -87,7 +89,7 @@ validate_dependencies() {
 # ---------------------------- LEVELS -----------------------------------------
 # -----------------------------------------------------------------------------
 
-get_allowed_levels_for_language() {
+languages::get_allowed_levels() {
     local lang
     lang=$(echo "$1" | tr '[:upper:]' '[:lower:]')
     local var_name="ALLOWED_LEVELS_${lang}"
@@ -95,7 +97,7 @@ get_allowed_levels_for_language() {
 }
 
 # Validates that the provided level (build or prod) is allowed for the specified language.
-validate_level_for_language() {
+languages::validate_level() {
     local language="$1"
     local level="$2"
     local allowed_levels
@@ -103,6 +105,7 @@ validate_level_for_language() {
     allowed_levels=$(get_allowed_levels_for_language "$language")
     if [ -z "$allowed_levels" ]; then
         echo "Error: Language '$language' does not support levels." >&2
+        echo "Run '${ROOT_SCRIPT} new ${language} --show-dependencies' to see supported levels and dependencies" >&2
         exit 1
     fi
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "$(dirname "${BASH_SOURCE[0]}")/languages_dependencies_levels.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/languages.sh"
 
 #-------------------------------------------------------------
 # FINISH EXECUTION
@@ -33,7 +33,7 @@ die() {
 # Arguments:
 #   $1: The command to be checked for availability.
 #-------------------------------------------------------------
-need_cmd() {
+utils::need_cmd() {
     if ! check_cmd "$1"; then
         die "Error: '$1' command not found but needed"
     fi

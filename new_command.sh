@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
+# new_command.sh
 
 source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
-source "$(dirname "${BASH_SOURCE[0]}")/languages_dependencies_levels.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/languages.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/.env"
 source "$(dirname "${BASH_SOURCE[0]}")/logger.sh"
 
-handle_new_command() {
+new_command::handle_new_command() {
     if [ $# -lt 1 ]; then
         echo "Error: 'new' requires an additional argument."
         echo "Use -h or --help for usage information."
@@ -14,12 +15,12 @@ handle_new_command() {
     fi
     # Check if the first argument is -h or --help before validating language.
     if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-        usage_new
+        usage::new_command
         exit 0
     fi
 
     local language="$1"
-    validate_language "$language"
+    languages::validate "$language"
     shift
 
     local dependencies_flag=""
@@ -70,7 +71,7 @@ handle_new_command() {
             show_deps_flag="true"
             ;;
         -h | --help)
-            usage_new
+            usage::new
             exit 0
             ;;
         *)
@@ -124,7 +125,7 @@ process_level_flag() {
             error "Error: 'dev' is the default level and should not be explicitly passed. Allowed levels are: build, prod." >&2
             exit 1
         fi
-        validate_level_for_language "$language" "$level"
+        languages::validate_level "$language" "$level"
         echo "$level"
     fi
 }
@@ -135,8 +136,8 @@ show_supported_options() {
     local deps
     local levels
 
-    deps=$(get_allowed_dependencies_for_language "$language")
-    levels=$(get_allowed_levels_for_language "$language")
+    deps=$(languages::get_allowed_dependencies "$language")
+    levels=$(languages::get_allowed_levels "$language")
 
     if [ "$language" = "java" ]; then
         echo "Maven is the default build tool for Java projects."
