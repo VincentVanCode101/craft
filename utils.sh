@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# utils.sh
 
 source "$(dirname "${BASH_SOURCE[0]}")/languages.sh"
 
@@ -14,7 +15,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/languages.sh"
 #   $1: The error message to be printed.
 #   $2: (Optional) The exit status. Default is 1.
 #-------------------------------------------------------------
-die() {
+_die() {
     local msg=$1
     local code=${2:-1} # default exit status 1
     error "$msg"
@@ -34,8 +35,8 @@ die() {
 #   $1: The command to be checked for availability.
 #-------------------------------------------------------------
 utils::need_cmd() {
-    if ! check_cmd "$1"; then
-        die "Error: '$1' command not found but needed"
+    if ! _check_cmd "$1"; then
+        _die "Error: '$1' command not found but needed"
     fi
 }
 
@@ -51,6 +52,6 @@ utils::need_cmd() {
 # Arguments:
 #   $1: The command to be checked for availability.
 #-------------------------------------------------------------
-check_cmd() {
+_check_cmd() {
     command -v "$1" >/dev/null 2>&1
 }

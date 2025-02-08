@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# craft.sh
 set -Eeuo pipefail
 trap 'echo "Caught Ctrl+C! Exiting gracefully."; exit 1' SIGINT
 trap 'echo "Caught termination signal! Exiting gracefully."; exit 1' SIGTERM

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# uninstall.sh
 set -euo pipefail
 
 #######################################

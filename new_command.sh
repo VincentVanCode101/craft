@@ -13,7 +13,7 @@ new_command::handle_new_command() {
         echo "-> ${CRAFT_BINARY_NAME} -h || ${CRAFT_BINARY_NAME} new -h"
         exit 1
     fi
-    # Check if the first argument is -h or --help before validating language.
+
     if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
         usage::new_command
         exit 0
@@ -84,7 +84,7 @@ new_command::handle_new_command() {
     done
 
     if [ "$show_deps_flag" = "true" ]; then
-        show_supported_options "$language"
+        _show_supported_options "$language"
         exit 0
     fi
 
@@ -94,19 +94,21 @@ new_command::handle_new_command() {
         parse_dependencies "$dependencies_flag"
     fi
 
-    local branch_name
-    branch_name=$(construct_branch_name "$language" "$dependencies_flag" "$level_flag")
-    echo "Using branch: $branch_name"
+    local template_key
+    branch_name=$(_construct_templates_key "$language" "$dependencies_flag" "$level_flag")
+    echo "Using template key: $template_key"
 
     local project_dir
-    project_dir=$(create_project_folder "$branch_name" "$path_flag")
+    project_dir=$(_create_project_folder "$template_key" "$path_flag")
 
     trap 'error_handler "$project_dir"' ERR
     trap 'error_handler "$project_dir"' EXIT
 
-    download_templates "$branch_name" "$project_dir"
+    local templates_url
+    templates_url=$(_get_templates_url "$template_key")
+    _download_templates "$templates_url" "$project_dir"
 
-    create_new_project "$language" "$dependencies_flag" "$project_dir"
+    _create_new_project "$language" "$dependencies_flag" "$project_dir"
 
     trap - ERR EXIT
     exit 0
@@ -131,7 +133,7 @@ process_level_flag() {
 }
 
 # Displays supported dependencies and allowed levels for a language.
-show_supported_options() {
+_show_supported_options() {
     local language="$1"
     local deps
     local levels
@@ -164,23 +166,40 @@ show_supported_options() {
     fi
 }
 
-# Downloads the template files from the remote repository based on the branch name.
-# Since branches are named using underscores, the branch name directly forms the variable name.
-download_templates() {
-    local branch_name="$1"
-    local target_dir="$2"
-    local var_name="TEMPLATES_URL_${branch_name}"
-
+# ---------------------------------------------------------------------
+# Retrieves the templates URL from the environment using the templates key.
+# The .env file should define variables in the format: TEMPLATES_URL_<key>
+# ---------------------------------------------------------------------
+_get_templates_url() {
+    local template_key="$1"
+    local var_name="TEMPLATES_URL_${template_key}"
     local templates_url="${!var_name:-}"
 
     if [ -z "$templates_url" ]; then
-        echo "Error: No templates URL found for branch '$branch_name'."
-        echo "Please define ${var_name} in your .env file."
+        echo "Error: No templates URL found for key '$template_key'." >&2
+        echo "Please define ${var_name} in your .env file." >&2
         exit 1
     fi
 
-    echo "Downloading templates from ${templates_url} into ${target_dir}..."
-    curl -L -o "${target_dir}/templates.zip" "$templates_url"
+    echo "$templates_url"
+}
+
+# ---------------------------------------------------------------------
+# Downloads the template files from the remote repository.
+#
+# Arguments:
+#   $1 - The URL from which to download the templates.
+#   $2 - The destination directory where the templates should be extracted.
+#
+# This function downloads the zip file from the provided URL into the target
+# directory, unzips its contents, and cleans up the downloaded zip file.
+# ---------------------------------------------------------------------
+_download_templates() {
+    local url="$1"
+    local target_dir="$2"
+
+    echo "Downloading templates from ${url} into ${target_dir}..."
+    curl -L -o "${target_dir}/templates.zip" "$url"
     unzip -o "${target_dir}/templates.zip" -d "$target_dir"
     rm "${target_dir}/templates.zip"
 
@@ -195,7 +214,7 @@ download_templates() {
 
 # Creates the project folder.
 # If a --path flag is passed, that folder is used; otherwise, a folder named "craft-<branchname>" is created.
-create_project_folder() {
+_create_project_folder() {
     local branch_name="$1"
     local path_flag="$2"
     local project_dir=""
@@ -224,7 +243,7 @@ create_project_folder() {
 # Checks if a "create.sh" script is present in the downloaded files.
 # If present, executes it (passing the project name) and removes it upon success.
 # If not, prints an error and cleans up the project directory.
-create_new_project() {
+_create_new_project() {
     local language="$1"
     local dependencies="$2"
     local project_dir="$3"
@@ -243,31 +262,34 @@ create_new_project() {
             rm -f "$project_dir/create.sh"
         else
             echo "Error: create.sh execution failed." >&2
-            cleanup_project "$project_dir"
+            _cleanup_project "$project_dir"
             exit 1
         fi
     else
         echo "Error: No create.sh found in $project_dir." >&2
         echo "${CRAFT_BINARY_NAME} expects a create.sh script to set up the project. Cleaning up..." >&2
-        cleanup_project "$project_dir"
+        _cleanup_project "$project_dir"
         exit 1
     fi
 
     echo "Project setup complete for $language."
 }
 
-# Constructs a canonical branch name based on language, level, and dependencies.
-# Uses underscores to separate parts.
-construct_branch_name() {
+# ---------------------------------------------------------------------
+# Constructs a canonical templates key based on language, level, and dependencies.
+# Uses underscores to separate parts. This key is used to look up the corresponding
+# template URL from the .env file (e.g. TEMPLATES_URL_<key>).
+# ---------------------------------------------------------------------
+_construct_templates_key() {
     local language="$1"
     local dep_string="$2"
     local level="$3"
-    local branch_name=""
+    local key=""
 
     if [ -n "$level" ]; then
-        branch_name="${language}_${level}"
+        key="${language}_${level}"
     else
-        branch_name="${language}"
+        key="${language}"
     fi
 
     if [ -n "$dep_string" ]; then
@@ -276,20 +298,20 @@ construct_branch_name() {
         sorted_deps=$(printf "%s\n" "${deps[@]}" | sort)
         local joined_deps
         joined_deps=$(echo "$sorted_deps" | tr '\n' '_' | sed 's/_$//')
-        branch_name="${branch_name}_${joined_deps}"
+        key="${key}_${joined_deps}"
     fi
 
-    echo "$branch_name"
+    echo "$key"
 }
 
 # Cleans up (removes) the project directory if an error occurs.
-cleanup_project() {
+_cleanup_project() {
     local project_dir="$1"
     echo "Cleaning up project directory: $project_dir" >&2
     rm -rf "$project_dir"
 }
 
-error_handler() {
+_error_handler() {
     # BASH_LINENO[0] is the line number of the command that failed.
     # FUNCNAME[1] is the name of the function where the error occurred (or MAIN if not in a function).
     local line_number="${BASH_LINENO[0]}"
