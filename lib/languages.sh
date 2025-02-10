@@ -5,6 +5,7 @@ export AVAILABLE_LANGUAGES=("go" "java" "rust")
 
 GO_DEPENDENCIES=("")
 JAVA_DEPENDENCIES=("")
+RUST_DEPENDENCIES=("")
 
 export ALLOWED_LEVELS_go=""
 export ALLOWED_LEVELS_java=""
@@ -49,6 +50,7 @@ languages::get_allowed_dependencies() {
 
     go) echo "${GO_DEPENDENCIES[*]}" ;;
     java) echo "${JAVA_DEPENDENCIES[*]}" ;;
+    rust) echo "${RUST_DEPENDENCIES[*]}" ;;
     *) echo "" ;;
     esac
 }

@@ -1,0 +1,7 @@
+services:
+  shellcheck:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/workdir:ro

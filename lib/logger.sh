@@ -4,13 +4,7 @@
 #-------------------------------------------------------------
 # SETUP COLORS CONFIGURATION
 # This function configures color output for the script if the
-# terminal supports it and colorization is enabled. It assigns
-# ANSI color codes to variables for use in printing colored
-# output messages.
-#
-# Usage:
-#   This function should be called at the beginning of the
-#   script to set up color configurations.
+# terminal supports it and colorization is enabled.
 #-------------------------------------------------------------
 logger::setup_colors() {
     if [[ -t 2 ]] && [[ -z "${NO_COLOR-}" ]] && [[ "${TERM-}" != "dumb" ]]; then
@@ -29,6 +23,11 @@ logger::setup_colors() {
     fi
 }
 
+#-------------------------------------------------------------
+# INTERNAL LOG FUNCTION
+# This function prints the log message with the appropriate color,
+# timestamp, and log level.
+#-------------------------------------------------------------
 _log() {
     local level="$1"
     shift
@@ -46,11 +45,17 @@ _log() {
     echo -e "${color}[$(_now)] [$level]: $message${COLOR_RESET}"
 }
 
+#-------------------------------------------------------------
+# LOGGING FUNCTIONS
+# These functions log messages at different levels.
+#-------------------------------------------------------------
 logger::debug() {
     if [[ "${DEBUG}" == "true" ]]; then
         local caller_info
         caller_info=$(caller 0)
-        _log "DEBUG" "$@ (caller: ${caller_info})"
+        local msg
+        msg="$* (caller: ${caller_info})"
+        _log "DEBUG" "$msg"
     fi
 }
 
@@ -58,9 +63,11 @@ logger::info() {
     if [[ "${DEBUG}" == "true" ]]; then
         local caller_info
         caller_info=$(caller 0)
-        _log "INFO" "$@ (caller: ${caller_info})"
+        local msg
+        msg="$* (caller: ${caller_info})"
+        _log "INFO" "$msg"
     else
-        _log "INFO" "$@"
+        _log "INFO" "$*"
     fi
 }
 
@@ -68,9 +75,11 @@ logger::warn() {
     if [[ "${DEBUG}" == "true" ]]; then
         local caller_info
         caller_info=$(caller 0)
-        _log "WARN" "$@ (caller: ${caller_info})"
+        local msg
+        msg="$* (caller: ${caller_info})"
+        _log "WARN" "$msg"
     else
-        _log "WARN" "$@"
+        _log "WARN" "$*"
     fi
 }
 
@@ -78,9 +87,11 @@ logger::error() {
     if [[ "${DEBUG}" == "true" ]]; then
         local caller_info
         caller_info=$(caller 0)
-        _log "ERROR" "$@ (caller: ${caller_info})"
+        local msg
+        msg="$* (caller: ${caller_info})"
+        _log "ERROR" "$msg"
     else
-        _log "ERROR" "$@"
+        _log "ERROR" "$*"
     fi
 }
 

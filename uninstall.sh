@@ -1,51 +1,53 @@
 #!/usr/bin/env bash
-# uninstall.sh
 set -euo pipefail
 
 #######################################
-# Variables and Initialization
+# Helper Functions
 #######################################
 
-# Determine the repository directory based on the script's location.
-REPO_DIR="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
-
-# Ensure config.sh exists before sourcing it.
-CONFIG_FILE="${REPO_DIR}/lib/config.sh"
-if [[ ! -f "${CONFIG_FILE}" ]]; then
-    echo "Error: ${CONFIG_FILE} not found." >&2
+_die() {
+    echo "Error: $*" >&2
     exit 1
-fi
-source "${CONFIG_FILE}"
+}
 
-# Construct the full path to the repository binary.
-CRAFT_BINARY="${REPO_DIR}/${CRAFT_BINARY_NAME}"
-
-# Define the directories where symlinks might have been installed.
-BIN_DIRS=("/usr/local/bin" "/opt/homebrew/bin")
-
-#######################################
-# Functions
-#######################################
-
-# log: Print a message to stdout.
-log() {
+_log() {
     echo "$@"
 }
 
-# warn: Print a warning message to stderr.
-warn() {
-    echo "Warning: $@" >&2
+#######################################
+# Initialization Functions
+#######################################
+
+_get_repo_dir() {
+    REPO_DIR="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
 }
 
-# uninstall_from_directory: Remove the symlink from the given bin directory if it points to the expected binary.
-# Arguments:
-#   $1 - The bin directory to check.
-uninstall_from_directory() {
+_load_config() {
+    local config_file="${REPO_DIR}/lib/config.sh"
+    if [[ ! -f "${config_file}" ]]; then
+        _die "Configuration file not found: ${config_file}"
+    fi
+    # shellcheck disable=SC1090
+    source "${config_file}"
+}
+
+_set_craft_binary() {
+    if [[ -z "${CRAFT_BINARY_NAME:-}" ]]; then
+        _die "CRAFT_BINARY_NAME is not defined in config.sh"
+    fi
+    CRAFT_BINARY="${REPO_DIR}/${CRAFT_BINARY_NAME}"
+}
+
+#######################################
+# Uninstallation Functions
+#######################################
+
+_uninstall_from_directory() {
     local bin_dir="$1"
     local target="${bin_dir}/${CRAFT_BINARY_NAME}"
 
     if [[ ! -d "${bin_dir}" ]]; then
-        log "Directory ${bin_dir} does not exist. Skipping."
+        _log "Directory ${bin_dir} does not exist. Skipping."
         return
     fi
 
@@ -53,24 +55,35 @@ uninstall_from_directory() {
         local link_target
         link_target="$(readlink -f "$target")"
         if [[ "$link_target" == "$CRAFT_BINARY" ]]; then
-            log "Removing symlink: ${target} -> ${CRAFT_BINARY}"
+            _log "Removing symlink: ${target} -> ${CRAFT_BINARY}"
             sudo rm -f "$target"
         else
-            log "Skipping ${target} because it does not point to the expected binary."
+            _log "Skipping ${target} because it does not point to the expected binary."
         fi
     elif [[ -e "$target" ]]; then
-        log "A file exists at ${target} but is not a symlink. Skipping removal."
+        _log "A file exists at ${target} but is not a symlink. Skipping removal."
     else
-        log "No file or symlink found at ${target}."
+        _log "No file or symlink found at ${target}."
     fi
 }
 
 #######################################
-# Main Script Execution
+# Main Function
 #######################################
 
-for bin_dir in "${BIN_DIRS[@]}"; do
-    uninstall_from_directory "$bin_dir"
-done
+_main() {
+    _get_repo_dir
+    _load_config
+    _set_craft_binary
 
-log "uninstall.sh completed successfully."
+    # Define directories where the symlink may be installed.
+    local BIN_DIRS=("/usr/local/bin" "/opt/homebrew/bin")
+    for bin_dir in "${BIN_DIRS[@]}"; do
+        _uninstall_from_directory "$bin_dir"
+    done
+
+    _log "uninstall.sh completed successfully."
+}
+
+# Execute the main function.
+_main "$@"
