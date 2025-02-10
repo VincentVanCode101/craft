@@ -1,6 +1,6 @@
 - [] decide on:
     - [x] controlling the error-flow(use exit in function and trap EXIT with custom cleanup function, or use returns in functions and trap ERR)
-    - Make in docker (should I remove Make and substitute the fucntionality with bash scripts?)
+    - [] `make` in docker (should I remove Make and substitute the fucntionality with bash scripts?)
 
 - [] get Esa to do styling with ncurs
 
