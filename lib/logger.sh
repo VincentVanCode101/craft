@@ -44,6 +44,7 @@ log() {
     local color
 
     case "$level" in
+    DEBUG) color="$CYAN" ;;
     INFO) color="$GREEN" ;;
     WARN) color="$YELLOW" ;;
     ERROR) color="$RED" ;;
@@ -53,9 +54,44 @@ log() {
     echo -e "${color}[$(now)] [$level]: $message${COLOR_RESET}"
 }
 
-info() { log "INFO" "$@"; }
-warn() { log "WARN" "$@"; }
-error() { log "ERROR" "$@"; }
+logger::debug() {
+    if [[ "${DEBUG}" == "true" ]]; then
+        local caller_info
+        caller_info=$(caller 0)
+        log "DEBUG" "$@ (caller: ${caller_info})"
+    fi
+}
+
+info() {
+    if [[ "${DEBUG}" == "true" ]]; then
+        local caller_info
+        caller_info=$(caller 0)
+        log "INFO" "$@ (caller: ${caller_info})"
+    else
+        log "INFO" "$@"
+    fi
+}
+
+warn() {
+    if [[ "${DEBUG}" == "true" ]]; then
+        local caller_info
+        caller_info=$(caller 0)
+        log "WARN" "$@ (caller: ${caller_info})"
+    else
+        log "WARN" "$@"
+    fi
+}
+
+error() {
+    if [[ "${DEBUG}" == "true" ]]; then
+        local caller_info
+        caller_info=$(caller 0)
+        log "ERROR" "$@ (caller: ${caller_info})"
+    else
+        log "ERROR" "$@"
+        echo "Use -h or --help for usage information." >&2
+    fi
+}
 
 #-------------------------------------------------------------
 # PRINT MESSAGES

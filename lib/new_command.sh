@@ -3,7 +3,7 @@
 
 source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/languages.sh"
-source "$(dirname "${BASH_SOURCE[0]}")/.env"
+source "$(dirname "${BASH_SOURCE[0]}")/../.env"
 source "$(dirname "${BASH_SOURCE[0]}")/logger.sh"
 
 new_command::handle_new_command() {
