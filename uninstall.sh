@@ -10,7 +10,7 @@ set -euo pipefail
 REPO_DIR="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
 
 # Ensure config.sh exists before sourcing it.
-CONFIG_FILE="${REPO_DIR}/config.sh"
+CONFIG_FILE="${REPO_DIR}/lib/config.sh"
 if [[ ! -f "${CONFIG_FILE}" ]]; then
     echo "Error: ${CONFIG_FILE} not found." >&2
     exit 1

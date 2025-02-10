@@ -16,7 +16,7 @@ init::setup() {
     ROOT_SCRIPT="$(basename "$0")"
     readonly ROOT_SCRIPT
 
-    DEBUG=true
+    DEBUG=false
     SUPER_DEBUG=false
 
     source "$SCRIPT_DIR/lib/utils.sh"

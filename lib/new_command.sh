@@ -95,14 +95,16 @@ new_command::handle_new_command() {
     fi
 
     local template_key
-    branch_name=$(_construct_templates_key "$language" "$dependencies_flag" "$level_flag")
-    echo "Using template key: $template_key"
+    template_key=$(_construct_templates_key "$language" "$dependencies_flag" "$level_flag")
 
     local project_dir
     project_dir=$(_create_project_folder "$template_key" "$path_flag")
 
-    trap 'error_handler "$project_dir"' ERR
-    trap 'error_handler "$project_dir"' EXIT
+    # I am not trapping ERR right now since for example when to templates key
+    # is defined for the input, the _error_handler is executed twice
+    # trap '_error_handler "$project_dir"' ERR
+
+    trap '_error_handler "$project_dir"' EXIT
 
     local templates_url
     templates_url=$(_get_templates_url "$template_key")
@@ -114,9 +116,6 @@ new_command::handle_new_command() {
     exit 0
 }
 
-# Processes the level flag.
-# If no level is provided, default is implicitly "dev" (but not mentioned in branch names).
-# If provided, it must be either "build" or "prod".
 process_level_flag() {
     local language="$1"
     local level="$2"
@@ -176,8 +175,8 @@ _get_templates_url() {
     local templates_url="${!var_name:-}"
 
     if [ -z "$templates_url" ]; then
-        echo "Error: No templates URL found for key '$template_key'." >&2
-        echo "Please define ${var_name} in your .env file." >&2
+        logger::error "No templates URL found for key '$template_key'." >&2
+        logger::error "Please define ${var_name} in your .env file." >&2
         exit 1
     fi
 
@@ -198,15 +197,14 @@ _download_templates() {
     local url="$1"
     local target_dir="$2"
 
-    echo "Downloading templates from ${url} into ${target_dir}..."
+    logger::info "Downloading templates from ${url} into ${target_dir}..."
     curl -L -o "${target_dir}/templates.zip" "$url"
-    unzip -o "${target_dir}/templates.zip" -d "$target_dir"
+    unzip -o "${target_dir}/templates.zip" -d "$target_dir" 1>/dev/null
     rm "${target_dir}/templates.zip"
 
     local extracted_folder
     extracted_folder=$(find "$target_dir" -mindepth 1 -maxdepth 1 -type d | head -n 1)
     if [ -n "$extracted_folder" ]; then
-        echo "Moving contents from $extracted_folder to $target_dir..."
         mv "$extracted_folder"/* "$target_dir"/
         rm -rf "$extracted_folder"
     fi
@@ -229,11 +227,11 @@ _create_project_folder() {
     fi
 
     if [ -d "$project_dir" ]; then
-        echo "Directory '$project_dir' already exists. Use a different path/name." >&2
+        logger::error "Directory '$project_dir' already exists. Use a different path/name." >&2
         exit 1
     else
         mkdir -p "$project_dir"
-        echo "Created project directory: $project_dir" >&2
+        logger::info "Created project directory: $project_dir" >&2
     fi
 
     echo "$project_dir"
@@ -248,31 +246,32 @@ _create_new_project() {
     local dependencies="$2"
     local project_dir="$3"
 
-    echo "Project Language: $language"
-    echo "Project Dependencies: $dependencies"
-    echo "Project Directory: $project_dir"
+    logger::info "Project Details:"
+    logger::info "  - Project Language: $language"
+    logger::info "  - Project Dependencies: $dependencies"
+    logger::info "  - Project Directory: $project_dir"
 
     local project_name
     project_name=$(basename "$project_dir")
 
     if [ -f "$project_dir/create.sh" ]; then
-        echo "Found create.sh in $project_dir, executing it..."
+        logger::info "Found create.sh in $project_dir, executing it..."
         if (cd "$project_dir" && bash create.sh "$project_name"); then
-            echo "create.sh executed successfully. Removing create.sh..."
+            logger::info "create.sh executed successfully. Removing create.sh..."
             rm -f "$project_dir/create.sh"
         else
-            echo "Error: create.sh execution failed." >&2
+            logger::error "create.sh execution failed." >&2
             _cleanup_project "$project_dir"
             exit 1
         fi
     else
-        echo "Error: No create.sh found in $project_dir." >&2
-        echo "${CRAFT_BINARY_NAME} expects a create.sh script to set up the project. Cleaning up..." >&2
+        logger::warn "No create.sh found in $project_dir." >&2
+        logger::error "${CRAFT_BINARY_NAME} expects a create.sh script to set up the project. Cleaning up..." >&2
         _cleanup_project "$project_dir"
         exit 1
     fi
 
-    echo "Project setup complete for $language."
+    logger::info "Project setup complete for $language."
 }
 
 # ---------------------------------------------------------------------
@@ -319,10 +318,10 @@ _error_handler() {
 
     local project_dir="$1"
 
-    if [[ "${DEBUG:-false}" == "true" ]]; then
-        error "An error occurred while executing function \"$func\" on line $line_number. Removing created project directory: $project_dir" >&2
+    if [[ "${DEBUG}" == "true" ]]; then
+        logger::error "An error occurred while executing function \"$func\" on line $line_number. Removing created project directory: $project_dir" >&2
     else
-        error "An error occurred. Removing created project directory: $project_dir" >&2
+        logger::error "An error occurred. Removing created project directory: $project_dir" >&2
     fi
 
     rm -rf "$project_dir"

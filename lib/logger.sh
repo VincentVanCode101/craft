@@ -62,7 +62,7 @@ logger::debug() {
     fi
 }
 
-info() {
+logger::info() {
     if [[ "${DEBUG}" == "true" ]]; then
         local caller_info
         caller_info=$(caller 0)
@@ -72,7 +72,7 @@ info() {
     fi
 }
 
-warn() {
+logger::warn() {
     if [[ "${DEBUG}" == "true" ]]; then
         local caller_info
         caller_info=$(caller 0)
@@ -82,14 +82,13 @@ warn() {
     fi
 }
 
-error() {
+logger::error() {
     if [[ "${DEBUG}" == "true" ]]; then
         local caller_info
         caller_info=$(caller 0)
         log "ERROR" "$@ (caller: ${caller_info})"
     else
         log "ERROR" "$@"
-        echo "Use -h or --help for usage information." >&2
     fi
 }
 

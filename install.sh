@@ -9,7 +9,7 @@ set -euo pipefail
 REPO_DIR="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
 
 # Load configuration. It is expected that config.sh defines CRAFT_BINARY_NAME.
-source "${REPO_DIR}/config.sh"
+source "${REPO_DIR}/lib/config.sh"
 
 # Construct the full path to the binary in the repository.
 CRAFT_BINARY="${REPO_DIR}/${CRAFT_BINARY_NAME}"
