@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 # craft.sh
 
-# Source the initialization module.
+# Source the initialization & update module.
 source "$(dirname "$(readlink -f "$0")")/lib/init.sh"
-
-init::setup
+source "$(dirname "$(readlink -f "$0")")/update.sh"
 
 main() {
+
+    init::setup
+
+    update::check_for_updates "$@"
 
     if [ $# -eq 0 ] || [[ "$1" =~ ^(-h|--help)$ ]]; then
         usage::general
