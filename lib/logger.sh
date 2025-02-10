@@ -37,7 +37,7 @@ logger::setup_colors() {
     fi
 }
 
-log() {
+_log() {
     local level="$1"
     shift
     local message="$*"
@@ -58,7 +58,7 @@ logger::debug() {
     if [[ "${DEBUG}" == "true" ]]; then
         local caller_info
         caller_info=$(caller 0)
-        log "DEBUG" "$@ (caller: ${caller_info})"
+        _log "DEBUG" "$@ (caller: ${caller_info})"
     fi
 }
 
@@ -66,9 +66,9 @@ logger::info() {
     if [[ "${DEBUG}" == "true" ]]; then
         local caller_info
         caller_info=$(caller 0)
-        log "INFO" "$@ (caller: ${caller_info})"
+        _log "INFO" "$@ (caller: ${caller_info})"
     else
-        log "INFO" "$@"
+        _log "INFO" "$@"
     fi
 }
 
@@ -76,9 +76,9 @@ logger::warn() {
     if [[ "${DEBUG}" == "true" ]]; then
         local caller_info
         caller_info=$(caller 0)
-        log "WARN" "$@ (caller: ${caller_info})"
+        _log "WARN" "$@ (caller: ${caller_info})"
     else
-        log "WARN" "$@"
+        _log "WARN" "$@"
     fi
 }
 
@@ -86,9 +86,9 @@ logger::error() {
     if [[ "${DEBUG}" == "true" ]]; then
         local caller_info
         caller_info=$(caller 0)
-        log "ERROR" "$@ (caller: ${caller_info})"
+        _log "ERROR" "$@ (caller: ${caller_info})"
     else
-        log "ERROR" "$@"
+        _log "ERROR" "$@"
     fi
 }
 
