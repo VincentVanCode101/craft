@@ -100,7 +100,8 @@ new_command::handle_new_command() {
     local project_dir
     project_dir=$(_create_project_folder "$template_key" "$path_flag")
 
-    # I am not trapping ERR right now since for example when to templates key
+    # TODO[]: investigate:
+    #I am not trapping ERR right now since for example when to templates key
     # is defined for the input, the _error_handler is executed twice
     # trap '_error_handler "$project_dir"' ERR
 
