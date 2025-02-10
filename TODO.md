@@ -26,5 +26,6 @@ readonly EXIT_INVALID_ARGS=1
 readonly EXIT_NETWORK_ERROR=2
 readonly EXIT_RUNTIME_ERROR=3
 ```
+- [ ] check https://discourse.ubuntu.com/c/design-system/cli-guidelines/62 for improvements
 
 - [ ] complete TODOs

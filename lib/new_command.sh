@@ -71,7 +71,7 @@ new_command::handle_new_command() {
             show_deps_flag="true"
             ;;
         -h | --help)
-            usage::new
+            usage::new_command
             exit 0
             ;;
         *)

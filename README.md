@@ -71,8 +71,8 @@ These problems slow down productivity, create barriers for quickly experimenting
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/VincentVanCode101/craft-bash-rewrite.git
-   cd craft-bash-rewrite
+   git clone https://github.com/VincentVanCode101/craft.git
+   cd craft
    ```
 
 2. Install the binary:
@@ -128,8 +128,6 @@ craft new <language>
    Maven is the default build-tool for the java projects:
    
    Supported Dependencies:
-     with the build tool 'maven' are:
-       - Springboot
        - Quarkus
    ```
 
