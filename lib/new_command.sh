@@ -220,6 +220,7 @@ _download_templates() {
     extracted_folder=$(find "$target_dir" -mindepth 1 -maxdepth 1 -type d | head -n 1)
     if [ -n "$extracted_folder" ]; then
         mv "$extracted_folder"/* "$target_dir"/
+        mv "$extracted_folder"/.* "$target_dir"/
         rm -rf "$extracted_folder"
     fi
 }
