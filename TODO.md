@@ -1,6 +1,6 @@
 - [ ] decide on:
-    - [x] controlling the error-flow(use exit in function and trap EXIT with custom cleanup function, or use returns in functions and trap ERR)
-    - [ ] `make` in docker (should I remove Make and substitute the fucntionality with bash scripts?)
+    - [x] controlling the error-flow(use exit in function and trap EXIT with custom cleanup function, or use returns in functions and trap ERR -> conclusion: I trap EXITs and use exit {code} inside my functions)
+    - [ ] `make` in docker (should I remove Make and substitute the fucntionality with bash scripts? -> conclusion: I use the functionality of make files *inside* the container, but abandon make and rather use shell scripts)
 
 - [ ] get Esa to do styling with ncurs
 
@@ -27,5 +27,29 @@ readonly EXIT_NETWORK_ERROR=2
 readonly EXIT_RUNTIME_ERROR=3
 ```
 - [ ] check https://discourse.ubuntu.com/c/design-system/cli-guidelines/62 for improvements
+
+- [x] contemplate if I should TODOs regarding templates in the templates repo (I should due to the fact they are actually separate from one another, but I do not want to commit to two repos as long as I am the only contributer to both)
+
+- [ ] add template support for:
+    - [ ] java quarkus
+    - [ ] java quarkus jaeger
+    - [ ] java quarkus OTEL-lgtm
+    - [ ] java build
+    - [ ] java prod
+    - [ ] go build
+    - [ ] go prod
+    - [ ] javascript (node)
+    - [ ] vue js (contemplate: should this be `new javascript --dependencies=vue` or just `new vue`)
+    - [ ] typescript (ESA?)
+    - [ ] java spring (ESA?, PFH?)
+    - [ ] python (JL?)
+    - [ ] ansible
+    - [ ] c (ESA?)
+    - [ ] c++
+    - [ ] c++ ncurses
+    - [ ] php (HN?)
+    - [ ] php symfony (HN?)
+    - [ ] php laravel (HN?)
+    - [ ] terraform
 
 - [ ] complete TODOs
