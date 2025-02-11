@@ -4,7 +4,7 @@
 export AVAILABLE_LANGUAGES=("go" "java" "rust")
 
 GO_DEPENDENCIES=("")
-JAVA_DEPENDENCIES=("")
+JAVA_DEPENDENCIES=("quarkus")
 RUST_DEPENDENCIES=("")
 
 export ALLOWED_LEVELS_go=""
@@ -62,7 +62,7 @@ languages::validate_dependencies() {
     local dep
     local valid
 
-    allowed_deps_str=$(get_allowed_dependencies_for_language "$language")
+    allowed_deps_str=$(languages::get_allowed_dependencies "$language")
     if [ -z "$allowed_deps_str" ]; then
         echo "Error: Language '$language' does not support dependencies."
         exit 1

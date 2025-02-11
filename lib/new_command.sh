@@ -5,12 +5,11 @@ source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/languages.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/../.env"
 source "$(dirname "${BASH_SOURCE[0]}")/logger.sh"
-
 new_command::handle_new_command() {
     if [ $# -lt 1 ]; then
         echo "Error: 'new' requires an additional argument."
         echo "Use -h or --help for usage information."
-        echo "-> ${CRAFT_BINARY_NAME} -h || ${CRAFT_BINARY_NAME} new -h"
+        echo "-> ${BINARY_NAME} -h || ${BINARY_NAME} new -h"
         exit 1
     fi
 
@@ -28,32 +27,33 @@ new_command::handle_new_command() {
     local level_flag=""
     local show_deps_flag=""
 
+    # Parse command-specific flags (including logging verbosity flags)
     while [ $# -gt 0 ]; do
         case "$1" in
         -p=* | --path=*)
             path_flag="${1#*=}"
             if [ -z "$path_flag" ]; then
                 echo "Warning: The '--path' flag requires a value."
-                echo "Usage: ${CRAFT_BINARY_NAME} new $language --path=<foo/bar/name>"
+                echo "Usage: ${BINARY_NAME} new $language --path=<foo/bar/name>"
                 exit 1
             fi
             ;;
         -p | --path)
             echo "Warning: The '--path' flag requires a value."
-            echo "Usage: ${CRAFT_BINARY_NAME} new $language --path=<foo/bar/name>"
+            echo "Usage: ${BINARY_NAME} new $language --path=<foo/bar/name>"
             exit 1
             ;;
         -d=* | --dependencies=*)
             dependencies_flag="${1#*=}"
             if [ -z "$dependencies_flag" ]; then
                 echo "Warning: The '--dependencies' flag requires a value."
-                echo "Usage: ${CRAFT_BINARY_NAME} new $language --dependencies=<dep1,dep2,...>"
+                echo "Usage: ${BINARY_NAME} new $language --dependencies=<dep1,dep2,...>"
                 exit 1
             fi
             ;;
         -d | --dependencies)
             echo "Warning: The '--dependencies' flag requires a value."
-            echo "Usage: ${CRAFT_BINARY_NAME} new $language --dependencies=<dep1,dep2,...>"
+            echo "Usage: ${BINARY_NAME} new $language --dependencies=<dep1,dep2,...>"
             exit 1
             ;;
         -l=* | --level=*)
@@ -70,6 +70,17 @@ new_command::handle_new_command() {
         --show-dependencies)
             show_deps_flag="true"
             ;;
+        # Logging verbosity flags
+        -q | --quiet)
+            LOG_LEVEL=1
+            ;;
+        -vv | --debug)
+            LOG_LEVEL=4
+            SUPER_DEBUG=true
+            ;;
+        -v | --verbose)
+            LOG_LEVEL=4
+            ;;
         -h | --help)
             usage::new_command
             exit 0
@@ -83,6 +94,12 @@ new_command::handle_new_command() {
         shift
     done
 
+    # Enable super-debug mode if requested.
+    if [ "$SUPER_DEBUG" = "true" ]; then
+        set -x
+        logger::debug "Super debug mode enabled"
+    fi
+
     if [ "$show_deps_flag" = "true" ]; then
         _show_supported_options "$language"
         exit 0
@@ -90,8 +107,9 @@ new_command::handle_new_command() {
 
     level_flag=$(process_level_flag "$language" "$level_flag")
     if [ -n "$dependencies_flag" ]; then
-        validate_dependencies "$language" "$dependencies_flag"
-        parse_dependencies "$dependencies_flag"
+        languages::validate_dependencies "$language" "$dependencies_flag"
+        # Whats with this line below?
+        # parse_dependencies "$dependencies_flag"
     fi
 
     local template_key
@@ -100,12 +118,7 @@ new_command::handle_new_command() {
     local project_dir
     project_dir=$(_create_project_folder "$template_key" "$path_flag")
 
-    # TODO[]: investigate:
-    #I am not trapping ERR right now since for example when to templates key
-    # is defined for the input, the _error_handler is executed twice
-    # trap '_error_handler "$project_dir"' ERR
-
-    trap '_error_handler "$project_dir"' EXIT
+    # trap '_error_handler "$project_dir"' EXIT
 
     local templates_url
     templates_url=$(_get_templates_url "$template_key")
@@ -262,13 +275,13 @@ _create_new_project() {
             rm -f "$project_dir/create.sh"
         else
             logger::error "create.sh execution failed." >&2
-            _cleanup_project "$project_dir"
+            _error_handler "$project_dir"
             exit 1
         fi
     else
         logger::warn "No create.sh found in $project_dir." >&2
-        logger::error "${CRAFT_BINARY_NAME} expects a create.sh script to set up the project. Cleaning up..." >&2
-        _cleanup_project "$project_dir"
+        logger::error "${BINARY_NAME} expects a create.sh script to set up the project. Cleaning up..." >&2
+        _error_handler "$project_dir"
         exit 1
     fi
 

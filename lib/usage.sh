@@ -43,6 +43,12 @@ usage::general() {
     echo -e "                         will be created in a folder named: ${BOLD}craft-java-prod-mariadb-ncurs${RESET}"
     echo
 
+    echo -e "${BOLD}VERBOSITY FLAGS${RESET}"
+    echo -e "  ${BOLD}-q, --quiet${RESET}            Only display error messages."
+    echo -e "  ${BOLD}-v, --verbose${RESET}          Enable verbose output (debug messages enabled)."
+    echo -e "  ${BOLD}-vv, --debug${RESET}           Enable super-debug mode (verbose output with shell tracing)."
+    echo
+
     echo -e "${BOLD}INFORMATIVE OUTPUT FLAGS FOR THE 'new' COMMAND${RESET}"
     echo -e "  ${BOLD}--show-dependencies${RESET}    Show supported dependencies and allowed levels for the specified language."
     echo -e "                         e.g.: ${ROOT_SCRIPT} new java --show-dependencies"
@@ -53,6 +59,8 @@ usage::general() {
     echo -e "  ${ROOT_SCRIPT} -h"
     echo -e "  ${ROOT_SCRIPT} new -h"
     echo -e "  ${ROOT_SCRIPT} new go"
+    echo -e "  ${ROOT_SCRIPT} new python -vv --dependencies=flask,sqlalchemy"
+    echo -e "  ${ROOT_SCRIPT} new java -q"
     echo -e "  ${ROOT_SCRIPT} new java --dependencies=mariadb,ncurs --level=prod --path=~/projects/java_app"
     echo -e "  ${ROOT_SCRIPT} new java --show-dependencies"
     exit 0
@@ -81,13 +89,23 @@ usage::new_command() {
     echo -e "  ${BOLD}-p, --path${RESET} string           Specify a path for the new project (last segment is the project name)"
     echo
 
+    echo -e "${BOLD}VERBOSITY FLAGS${RESET}"
+    echo -e "  ${BOLD}-q, --quiet${RESET}            Only display error messages."
+    echo -e "  ${BOLD}-v, --verbose${RESET}          Enable verbose output (debug messages enabled)."
+    echo -e "  ${BOLD}-vv, --debug${RESET}           Enable super-debug mode (verbose output with shell tracing)."
+    echo
+
     echo -e "${BOLD}INFORMATIVE OUTPUT FLAGS${RESET}"
     echo -e "  ${BOLD}--show-dependencies${RESET}         Show supported dependencies and allowed levels for the specified language."
     echo -e "  ${BOLD}-h, --help${RESET}                  Display help for the 'new' command."
     echo
 
     echo -e "${BOLD}USAGE EXAMPLES${RESET}"
+    echo -e "${BOLD}USAGE EXAMPLES${RESET}"
     echo -e "  ${ROOT_SCRIPT} new java --show-dependencies"
-    echo -e "  ${ROOT_SCRIPT} new java --dependencies=mariadb,ncurs --level=prod --path=~/projects/java_app"
+    echo -e "  ${ROOT_SCRIPT} new java -d=mariadb,ncurs -l=prod -p=~/projects/java_app"
+    echo -e "  ${ROOT_SCRIPT} new java -v"
+    echo -e "  ${ROOT_SCRIPT} new go -q"
+    echo -e "  ${ROOT_SCRIPT} new python -vv -d=flask,sqlalchemy"
     exit 0
 }

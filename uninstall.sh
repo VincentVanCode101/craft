@@ -31,11 +31,11 @@ _load_config() {
     source "${config_file}"
 }
 
-_set_craft_binary() {
-    if [[ -z "${CRAFT_BINARY_NAME:-}" ]]; then
-        _die "CRAFT_BINARY_NAME is not defined in config.sh"
+_set_binary() {
+    if [[ -z "${BINARY_NAME:-}" ]]; then
+        _die "BINARY_NAME is not defined in config.sh"
     fi
-    CRAFT_BINARY="${REPO_DIR}/${CRAFT_BINARY_NAME}"
+    BINARY="${REPO_DIR}/${BINARY_NAME}"
 }
 
 #######################################
@@ -44,7 +44,7 @@ _set_craft_binary() {
 
 _uninstall_from_directory() {
     local bin_dir="$1"
-    local target="${bin_dir}/${CRAFT_BINARY_NAME}"
+    local target="${bin_dir}/${BINARY_NAME}"
 
     if [[ ! -d "${bin_dir}" ]]; then
         _log "Directory ${bin_dir} does not exist. Skipping."
@@ -54,8 +54,8 @@ _uninstall_from_directory() {
     if [[ -L "$target" ]]; then
         local link_target
         link_target="$(readlink -f "$target")"
-        if [[ "$link_target" == "$CRAFT_BINARY" ]]; then
-            _log "Removing symlink: ${target} -> ${CRAFT_BINARY}"
+        if [[ "$link_target" == "$BINARY" ]]; then
+            _log "Removing symlink: ${target} -> ${BINARY}"
             sudo rm -f "$target"
         else
             _log "Skipping ${target} because it does not point to the expected binary."
@@ -74,7 +74,7 @@ _uninstall_from_directory() {
 _main() {
     _get_repo_dir
     _load_config
-    _set_craft_binary
+    _set_binary
 
     # Define directories where the symlink may be installed.
     local BIN_DIRS=("/usr/local/bin" "/opt/homebrew/bin")

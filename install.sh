@@ -31,12 +31,12 @@ _load_config() {
     source "${config_file}"
 }
 
-# _set_craft_binary: Build the full path to the repository binary.
-_set_craft_binary() {
-    if [[ -z "${CRAFT_BINARY_NAME:-}" ]]; then
-        _die "CRAFT_BINARY_NAME is not defined in config.sh"
+# _set_binary: Build the full path to the repository binary.
+_set_binary() {
+    if [[ -z "${BINARY_NAME:-}" ]]; then
+        _die "BINARY_NAME is not defined in config.sh"
     fi
-    CRAFT_BINARY="${REPO_DIR}/${CRAFT_BINARY_NAME}"
+    BINARY="${REPO_DIR}/${BINARY_NAME}"
 }
 
 #######################################
@@ -56,7 +56,7 @@ _find_target_dir() {
 
 # _set_target: Build the full target path for the symlink.
 _set_target() {
-    TARGET="${TARGET_DIR}/${CRAFT_BINARY_NAME}"
+    TARGET="${TARGET_DIR}/${BINARY_NAME}"
 }
 
 #######################################
@@ -66,20 +66,20 @@ _set_target() {
 # _create_symlink: Remove an existing symlink/file at TARGET, create a new symlink,
 # and verify that it points to the expected binary.
 _create_symlink() {
-    echo "Creating symlink: ${TARGET} -> ${CRAFT_BINARY}"
+    echo "Creating symlink: ${TARGET} -> ${BINARY}"
     if [[ -e "$TARGET" || -L "$TARGET" ]]; then
         echo "Removing existing file or symlink at ${TARGET}"
         sudo rm -f "$TARGET"
     fi
 
-    sudo ln -s "$CRAFT_BINARY" "$TARGET"
+    sudo ln -s "$BINARY" "$TARGET"
 
     # Verify that the symlink points to the expected binary.
     local resolved_path
     resolved_path="$(readlink -f "$TARGET")"
-    if [[ "$resolved_path" != "$CRAFT_BINARY" ]]; then
+    if [[ "$resolved_path" != "$BINARY" ]]; then
         _die "The symlink does not point to the expected file.
-Expected: ${CRAFT_BINARY}
+Expected: ${BINARY}
 Got:      ${resolved_path}"
     fi
 
@@ -93,7 +93,7 @@ Got:      ${resolved_path}"
 _main() {
     _get_repo_dir
     _load_config
-    _set_craft_binary
+    _set_binary
     _find_target_dir
     _set_target
     _create_symlink
