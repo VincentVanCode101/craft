@@ -111,7 +111,9 @@ _log() {
     *) color="$COLOR_RESET" ;;
     esac
 
-    echo -e "${color}[$(_now)] [$level]: $message${COLOR_RESET}"
+    local log_message="${color}[$level]: $message${COLOR_RESET}"
+
+    echo -e "$log_message" >&2
 }
 
 logger::debug() {
@@ -171,4 +173,8 @@ logger::error() {
             _log "ERROR" "$*"
         fi
     fi
+}
+
+logger::print() {
+    echo -e "$*" >&2
 }

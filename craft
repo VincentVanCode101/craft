@@ -22,6 +22,7 @@ _setup() {
     source "$SCRIPT_DIR/lib/utils.sh"
     source "$SCRIPT_DIR/lib/logger.sh"
     source "$SCRIPT_DIR/lib/usage.sh"
+    source "$SCRIPT_DIR/lib/version.sh"
     source "$SCRIPT_DIR/lib/new_command.sh"
 
     logger::setup_colors
@@ -40,6 +41,9 @@ main() {
 
     if [ $# -eq 0 ] || [[ "$1" =~ ^(-h|--help)$ ]]; then
         usage::general
+    elif [[ "$1" =~ ^(-v|--version)$ ]]; then
+        version::print
+        exit 0
     fi
 
     case "$1" in

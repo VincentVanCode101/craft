@@ -7,9 +7,8 @@ source "$(dirname "${BASH_SOURCE[0]}")/../.env"
 source "$(dirname "${BASH_SOURCE[0]}")/logger.sh"
 new_command::handle_new_command() {
     if [ $# -lt 1 ]; then
-        echo "Error: 'new' requires an additional argument."
-        echo "Use -h or --help for usage information."
-        echo "-> ${BINARY_NAME} -h || ${BINARY_NAME} new -h"
+        logger::error "'${BINARY_NAME} new' requires an additional argument."
+        logger::notice "Use '${BINARY_NAME} new --help' for usage information."
         exit 1
     fi
 
@@ -85,7 +84,7 @@ new_command::handle_new_command() {
             exit 0
             ;;
         *)
-            logger::error "Unknown option or argument '$1' after 'new $language'."
+            logger::error "Unknown option or argument '$1' after '${BINARY_NAME} new $language'."
             logger::notice "Use '${BINARY_NAME} new $language --help' for usage information."
             exit 1
             ;;
