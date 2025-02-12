@@ -1,6 +1,6 @@
 
 ---
-# **Craft CLI Tool**
+# **Craft Tool**
 
 ![Craft Logo](assets/logo.png)
 
