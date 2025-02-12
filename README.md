@@ -234,38 +234,6 @@ craft new <language>
 The official Craft Templates repository is located at:  
 [https://github.com/VincentVanCode101/craft-templates](https://github.com/VincentVanCode101/craft-templates)
 
-If you plan to contribute to this repository, please note the following guidelines regarding branch naming and template archive creation.
-
-### Branch Naming Conventions
----
-
-Template archives use a **templates key**—constructed by joining the language, an optional level (`build` or `prod`), and any dependencies (sorted alphabetically) with underscores.
-
-#### Key Construction
-
-- **Default Level:**  
-  No level specified → key is just the language (e.g., `go`).
-
-- **Explicit Level:**  
-  With a level → key is `language_level` (e.g., `go_prod`, `java_build`).
-
-- **With Dependencies:**  
-  Append sorted dependencies (e.g., `go_prod_mariadb_ncurs`).
-
-> **Important:** This constructed templates key must be the name of the branch in the [craft-templates repo](https://github.com/VincentVanCode101/craft-templates) (where the new template files will be stored under).
-
-This key maps to an environment variable in the `.env` file:
-```
-TEMPLATES_URL_<templates_key>
-```
-
-For example, a key of `python_build_fastapi` would then correspond to:
-
-```bash
-TEMPLATES_URL_python_build_fastapi="https://github.com/VincentVanCode101/craft-templates/archive/refs/heads/python_build_fastapi.zip"
-```
-
-
 
 ## Customizing Template URLs
 
