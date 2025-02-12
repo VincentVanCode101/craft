@@ -97,6 +97,7 @@ usage::new_command() {
 
     echo -e "${BOLD}INFORMATIVE OUTPUT FLAGS${RESET}"
     echo -e "  ${BOLD}--show-dependencies${RESET}         Show supported dependencies and allowed levels for the specified language."
+    echo -e "                              e.g.: ${ROOT_SCRIPT} new java --show-dependencies"
     echo -e "  ${BOLD}-h, --help${RESET}                  Display help for the 'new' command."
     echo
 

@@ -24,6 +24,7 @@ See how `Craft` solves the [problems of other scaffolding tools](#️-problems-w
 - [Installation](#installation)
 - [Command Line Usage](#command-line-usage)
   - [Creating New Projects](#creating-new-projects)
+- [Dependencies](#dependencies)
 - [Supported Languages](#supported-languages)
 - [Craft Templates Configuration and Contribution Guide](#craft-templates-configuration-and-contribution-guide)
   - [For Contributors to the Official Craft Templates Repository](#for-contributors-to-the-official-craft-templates-repository)
@@ -50,7 +51,7 @@ These problems slow down productivity, create barriers for quickly experimenting
 ## 🛠️ Why Use Craft?
 
 - **Dockerized Development**: Automatically creates a containerized environment for every project, so you don’t need the language or runtime installed on your machine.
-- **Lightweight and Fast**: Runs as a precompiled binary, ensuring fast execution without additional dependencies required on your host, expect for docker to setup some project dynamically.
+- **Lightweight and Fast**: Runs as a binary on unix systems (no support for windows), ensuring fast execution without much additional dependencies required on your host ([see dependencies](#dependencies)).
 - **Multi-Language Support**: Works seamlessly across multiple languages, making it versatile for various tasks.
 - **Minimal Setup**: Generates only the essential files needed to start coding, with the option to create more complex setups if you’re familiar with the language. This allows you to build and structure your project the way you want.
 - **Beginner-Friendly**: Focuses on simplicity and clarity, giving you exactly what you need to get started with a new language or task.
@@ -100,48 +101,55 @@ craft new <language>
   - **`build`**: Provides an enhanced setup which may include additional tools like pre-commit hooks.
   - **`prod`**: Sets up a production-ready project with multi-stage Dockerfile builds and other production optimizations.
   - (If omitted, the default level is implicitly `dev`, which typically creates a basic development container providing only a minimal runtime environment.)
+- **`--quiet`**: To contoll verbosity of the output: only display error messages.
+- **`--verbose`**: To contoll verbosity of the output: enable verbose output (debug messages enabled).
+- **`--debug`**: To contoll verbosity of the output: enable super-debug mode (verbose output with shell tracing).
 - **`--show-dependencies`**: Show supported dependencies for the specified language.
 
+---
+
 #### Examples:
-1. Generate a Go project named `craft-go` (using default settings):
+
+1. **Display the help information for Craft:**
+   ```bash
+   craft -h
+   ```
+
+2. **Display help for the `new` command:**
+   ```bash
+   craft new -h
+   ```
+
+3. **Generate a new Go project:**
    ```bash
    craft new go
    ```
 
-2. Generate a new Java project with Maven and Spring Boot in a directory named `MyJavaApp`:
+4. **Generate a new Python project with verbose logging (double verbose) and dependencies _flask_ and _sqlalchemy_:**
    ```bash
-   craft new java --path=MyJavaApp --dependencies=maven,spring
+   craft new python -vv --dependencies=flask,sqlalchemy
    ```
 
-3. Generate a new Java project with production-level setup and specific dependencies:
+5. **Generate a new Java project in quiet mode:**
    ```bash
-   craft new java --path=MyJavaApp --dependencies=maven,spring --level=prod
+   craft new java -q
    ```
 
-4. Show dependencies for the language `java`  
+6. **Generate a new Java project with production-level setup, including dependencies _mariadb_ and _ncurs_, and specify the project path:**
+   ```bash
+   craft new java --dependencies=mariadb,ncurs --level=prod --path=~/projects/java_app
+   ```
+
+7. **Show supported dependencies for the Java language:**
    ```bash
    craft new java --show-dependencies
    ```
 
-   Example output:
-   ```
-   Maven is the default build-tool for the java projects:
-   
-   Supported Dependencies:
-       - Quarkus
-   ```
-
-5. View help for the `new` command:
-   ```bash
-   craft new --help
-   ```
-   or
-
-   ```bash
-   craft new <languae> --help
-   ```
-
 ---
+## Dependencies
+- [Docker](https://www.docker.com/)
+- [Curl](https://wiki.ubuntuusers.de/cURL/)
+- [Unzip](https://www.tecmint.com/install-zip-and-unzip-in-linux/)
 
 
 # 🌐Supported Languages
