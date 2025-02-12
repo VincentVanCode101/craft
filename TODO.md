@@ -31,25 +31,27 @@ readonly EXIT_RUNTIME_ERROR=3
 - [x] contemplate if I should TODOs regarding templates in the templates repo (I should due to the fact they are actually separate from one another, but I do not want to commit to two repos as long as I am the only contributer to both)
 
 - [ ] add template support for:
-    - [x] java quarkus
-    - [ ] java quarkus jaeger
-    - [ ] java quarkus OTEL-lgtm
+    - [x] java with quarkus
+    - [ ] java with quarkus jaeger
+    - [ ] java with quarkus OTEL-lgtm
     - [ ] java build
     - [ ] java prod
     - [ ] go build
     - [ ] go prod
+    - [ ] go with ncurs
+    - [ ] go with air
     - [ ] javascript (node)
-    - [ ] vue js (contemplate: should this be `new javascript --dependencies=vue` or just `new vue`)
+    - [ ] javascript with vuejs
     - [ ] typescript (ESA?)
-    - [ ] java spring (ESA?, PFH?)
+    - [ ] java with spring (ESA?, PFH?)
     - [ ] python (JL?)
     - [ ] ansible
     - [ ] c (ESA?)
     - [ ] c++
-    - [ ] c++ ncurses
+    - [ ] c++ with ncurses
     - [ ] php (HN?)
-    - [ ] php symfony (HN?)
-    - [ ] php laravel (HN?)
+    - [ ] php with symfony (HN?)
+    - [ ] php with laravel (HN?)
     - [ ] terraform
 
 - [ ] replace Make (&Makefile) in java templates with bash script
