@@ -27,44 +27,43 @@ new_command::handle_new_command() {
     local level_flag=""
     local show_deps_flag=""
 
-    # Parse command-specific flags (including logging verbosity flags)
     while [ $# -gt 0 ]; do
         case "$1" in
         -p=* | --path=*)
             path_flag="${1#*=}"
             if [ -z "$path_flag" ]; then
-                echo "Warning: The '--path' flag requires a value."
-                echo "Usage: ${BINARY_NAME} new $language --path=<foo/bar/name>"
+                logger::error "The '--path' flag requires a value."
+                logger::notice "Usage: ${BINARY_NAME} new $language --path=<foo/bar/name>"
                 exit 1
             fi
             ;;
         -p | --path)
-            echo "Warning: The '--path' flag requires a value."
-            echo "Usage: ${BINARY_NAME} new $language --path=<foo/bar/name>"
+            logger::error "The '--path' flag requires a value."
+            logger::notice "Usage: ${BINARY_NAME} new $language --path=<foo/bar/name>"
             exit 1
             ;;
         -d=* | --dependencies=*)
             dependencies_flag="${1#*=}"
             if [ -z "$dependencies_flag" ]; then
-                echo "Warning: The '--dependencies' flag requires a value."
-                echo "Usage: ${BINARY_NAME} new $language --dependencies=<dep1,dep2,...>"
+                logger::error "The '--dependencies' flag requires a value."
+                logger::notice "Usage: ${BINARY_NAME} new $language --dependencies=<dep1,dep2,...>"
                 exit 1
             fi
             ;;
         -d | --dependencies)
-            echo "Warning: The '--dependencies' flag requires a value."
-            echo "Usage: ${BINARY_NAME} new $language --dependencies=<dep1,dep2,...>"
+            logger::error "The '--dependencies' flag requires a value."
+            logger::notice "Usage: ${BINARY_NAME} new $language --dependencies=<dep1,dep2,...>"
             exit 1
             ;;
         -l=* | --level=*)
             level_flag="${1#*=}"
             if [ -z "$level_flag" ]; then
-                echo "Warning: The '--level' flag requires a value (build or prod)."
+                logger::error "The '--level' flag requires a value (build or prod)."
                 exit 1
             fi
             ;;
         -l | --level)
-            echo "Warning: The '--level' flag requires a value (build or prod)."
+            logger::error "The '--level' flag requires a value (build or prod)."
             exit 1
             ;;
         --show-dependencies)
@@ -86,15 +85,14 @@ new_command::handle_new_command() {
             exit 0
             ;;
         *)
-            echo "Error: Unknown option or argument '$1' after 'new $language'."
-            echo "Use -h or --help for usage information."
+            logger::error "Unknown option or argument '$1' after 'new $language'."
+            logger::notice "Use '${BINARY_NAME} new $language --help' for usage information."
             exit 1
             ;;
         esac
         shift
     done
 
-    # Enable super-debug mode if requested.
     if [ "$SUPER_DEBUG" = "true" ]; then
         set -x
         logger::debug "Super debug mode enabled"
@@ -105,11 +103,9 @@ new_command::handle_new_command() {
         exit 0
     fi
 
-    level_flag=$(process_level_flag "$language" "$level_flag")
+    level_flag=$(_process_level_flag "$language" "$level_flag")
     if [ -n "$dependencies_flag" ]; then
         languages::validate_dependencies "$language" "$dependencies_flag"
-        # Whats with this line below?
-        # parse_dependencies "$dependencies_flag"
     fi
 
     local template_key
@@ -130,14 +126,14 @@ new_command::handle_new_command() {
     exit 0
 }
 
-process_level_flag() {
+_process_level_flag() {
     local language="$1"
     local level="$2"
     if [ -z "$level" ]; then
         echo ""
     else
         if [ "$level" = "dev" ]; then
-            error "Error: 'dev' is the default level and should not be explicitly passed. Allowed levels are: build, prod." >&2
+            logger::error "'dev' is the default level and should not be explicitly passed. Allowed levels are: build, prod." >&2
             exit 1
         fi
         languages::validate_level "$language" "$level"
@@ -145,7 +141,6 @@ process_level_flag() {
     fi
 }
 
-# Displays supported dependencies and allowed levels for a language.
 _show_supported_options() {
     local language="$1"
     local deps
@@ -227,10 +222,8 @@ _download_templates() {
     fi
 }
 
-# Creates the project folder.
-# If a --path flag is passed, that folder is used; otherwise, a folder named "craft-<branchname>" is created.
 _create_project_folder() {
-    local branch_name="$1"
+    local template_key="$1"
     local path_flag="$2"
     local project_dir=""
 
@@ -240,7 +233,7 @@ _create_project_folder() {
         fi
         project_dir="$path_flag"
     else
-        project_dir="craft-${branch_name}"
+        project_dir="craft-${template_key}"
     fi
 
     if [ -d "$project_dir" ]; then
@@ -254,10 +247,6 @@ _create_project_folder() {
     echo "$project_dir"
 }
 
-# Finalizes project creation.
-# Checks if a "create.sh" script is present in the downloaded files.
-# If present, executes it (passing the project name) and removes it upon success.
-# If not, prints an error and cleans up the project directory.
 _create_new_project() {
     local language="$1"
     local dependencies="$2"
@@ -299,11 +288,6 @@ _create_new_project() {
     logger::info "Project setup complete for $language."
 }
 
-# ---------------------------------------------------------------------
-# Constructs a canonical templates key based on language, level, and dependencies.
-# Uses underscores to separate parts. This key is used to look up the corresponding
-# template URL from the .env file (e.g. TEMPLATES_URL_<key>).
-# ---------------------------------------------------------------------
 _construct_templates_key() {
     local language="$1"
     local dep_string="$2"
@@ -326,13 +310,6 @@ _construct_templates_key() {
     fi
 
     echo "$key"
-}
-
-# Cleans up (removes) the project directory if an error occurs.
-_cleanup_project() {
-    local project_dir="$1"
-    echo "Cleaning up project directory: $project_dir" >&2
-    rm -rf "$project_dir"
 }
 
 # ---------------------------------------------------------------------

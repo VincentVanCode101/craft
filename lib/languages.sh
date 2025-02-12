@@ -8,7 +8,7 @@ JAVA_DEPENDENCIES=("quarkus")
 RUST_DEPENDENCIES=("")
 
 export ALLOWED_LEVELS_go=""
-export ALLOWED_LEVELS_java=""
+export ALLOWED_LEVELS_java="foo"
 export ALLOWED_LEVELS_rust=""
 
 # -----------------------------------------------------------------------------
@@ -31,9 +31,9 @@ languages::validate() {
     done
 
     if [ "$lang_is_available" = false ]; then
-        echo "Language '$lang' is not supported."
-        echo "Supported languages are:"
-        languages::print_available
+        logger::error "Language '$lang' is not supported."
+        logger::notice "Supported languages are: $(languages::print_available)"
+
         exit 1
     fi
 }
@@ -42,7 +42,6 @@ languages::validate() {
 # ---------------------------- DEPENDENCIES -----------------------------------
 # -----------------------------------------------------------------------------
 
-# Returns the allowed dependencies for the given language
 languages::get_allowed_dependencies() {
     local lang
     lang=$(echo "$1" | tr '[:upper:]' '[:lower:]')
@@ -64,7 +63,7 @@ languages::validate_dependencies() {
 
     allowed_deps_str=$(languages::get_allowed_dependencies "$language")
     if [ -z "$allowed_deps_str" ]; then
-        echo "Error: Language '$language' does not support dependencies."
+        logger::error "Language '$language' does not support dependencies."
         exit 1
     fi
 
@@ -80,8 +79,8 @@ languages::validate_dependencies() {
             fi
         done
         if [ "$valid" = false ]; then
-            echo "Error: Dependency '$dep' is not allowed for language '$language'."
-            echo "Allowed dependencies: ${allowed_deps[*]}"
+            logger::error "Dependency '$dep' is not allowed for language '$language'."
+            logger::notice "Allowed dependencies: ${allowed_deps[*]}"
             exit 1
         fi
     done
@@ -98,16 +97,15 @@ languages::get_allowed_levels() {
     echo "${!var_name}"
 }
 
-# Validates that the provided level (build or prod) is allowed for the specified language.
 languages::validate_level() {
     local language="$1"
     local level="$2"
     local allowed_levels
 
-    allowed_levels=$(get_allowed_levels_for_language "$language")
+    allowed_levels=$(languages::get_allowed_levels "$language")
     if [ -z "$allowed_levels" ]; then
-        echo "Error: Language '$language' does not support levels." >&2
-        echo "Run '${ROOT_SCRIPT} new ${language} --show-dependencies' to see supported levels and dependencies" >&2
+        logger::error "Language '$language' does not support levels." >&2
+        logger::notice "Run '${ROOT_SCRIPT} new ${language} --show-dependencies' to see supported levels and dependencies." >&2
         exit 1
     fi
 
@@ -117,6 +115,7 @@ languages::validate_level() {
         fi
     done
 
-    echo "Error: Invalid level '$level' for language '$language'. Allowed levels: $allowed_levels" >&2
+    logger::error "Invalid level '$level' for language '$language'." >&2
+    logger::notice "Allowed levels: $allowed_levels" >&2
     exit 1
 }

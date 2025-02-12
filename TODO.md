@@ -61,4 +61,6 @@ readonly EXIT_RUNTIME_ERROR=3
         - e.g. against {something}-compiler -> node is not a compiler
         - e.g. against {something}-runtime -> having clang or cpp installed in the dev container does not make it a runtime
 
+- [ ] stop commiting to main
+
 - [ ] complete TODOs

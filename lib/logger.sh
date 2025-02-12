@@ -11,12 +11,17 @@ logger::setup_colors() {
         GREEN='\033[0;32m'
         YELLOW='\033[0;33m'
         CYAN='\033[0;36m'
+        BLUE='\033[0;34m'
+        BLACK='\033[0;30m'
+
     else
         COLOR_RESET=''
         RED=''
         GREEN=''
         YELLOW=''
         CYAN=''
+        BLUE=''
+        BLACK=''
     fi
 }
 
@@ -26,6 +31,7 @@ logger::setup_colors() {
 #   ERROR = 1
 #   WARN  = 2
 #   INFO  = 3
+#   NOTICE = 3
 #   DEBUG = 4
 #-------------------------------------------------------------
 logger::get_level() {
@@ -33,6 +39,7 @@ logger::get_level() {
     ERROR) echo 1 ;;
     WARN) echo 2 ;;
     INFO) echo 3 ;;
+    NOTICE) echo 3 ;;
     DEBUG) echo 4 ;;
     *) echo 99 ;;
     esac
@@ -83,17 +90,13 @@ logger::parse_flags() {
         set -x
         logger::debug "Super debug mode enabled"
     fi
-    # After processing, "$@" will contain only non-global options.
 }
 
-#-------------------------------------------------------------
-# INTERNAL LOGGING FUNCTIONS
-#-------------------------------------------------------------
 _now() {
     date +%F-%T
 }
 
-logger::_log() {
+_log() {
     local level="$1"
     shift
     local message="$*"
@@ -102,6 +105,7 @@ logger::_log() {
     case "$level" in
     DEBUG) color="$CYAN" ;;
     INFO) color="$GREEN" ;;
+    NOTICE) color="$BLACK" ;;
     WARN) color="$YELLOW" ;;
     ERROR) color="$RED" ;;
     *) color="$COLOR_RESET" ;;
@@ -115,9 +119,9 @@ logger::debug() {
         if ((LOG_LEVEL >= 4)); then
             local caller_info
             caller_info=$(caller 0)
-            logger::_log "DEBUG" "$* (caller: ${caller_info})"
+            _log "DEBUG" "$* (caller: ${caller_info})"
         else
-            logger::_log "DEBUG" "$*"
+            _log "DEBUG" "$*"
         fi
     fi
 }
@@ -127,9 +131,9 @@ logger::info() {
         if ((LOG_LEVEL >= 4)); then
             local caller_info
             caller_info=$(caller 0)
-            logger::_log "INFO" "$* (caller: ${caller_info})"
+            _log "INFO" "$* (caller: ${caller_info})"
         else
-            logger::_log "INFO" "$*"
+            _log "INFO" "$*"
         fi
     fi
 }
@@ -139,9 +143,20 @@ logger::warn() {
         if ((LOG_LEVEL >= 4)); then
             local caller_info
             caller_info=$(caller 0)
-            logger::_log "WARN" "$* (caller: ${caller_info})"
+            _log "WARN" "$* (caller: ${caller_info})"
         else
-            logger::_log "WARN" "$*"
+            _log "WARN" "$*"
+        fi
+    fi
+}
+logger::notice() {
+    if (($(logger::get_level "NOTICE") <= LOG_LEVEL)); then
+        if ((LOG_LEVEL >= 4)); then
+            local caller_info
+            caller_info=$(caller 0)
+            _log "NOTICE" "$* (caller: ${caller_info})"
+        else
+            _log "NOTICE" "$*"
         fi
     fi
 }
@@ -151,9 +166,9 @@ logger::error() {
         if ((LOG_LEVEL >= 4)); then
             local caller_info
             caller_info=$(caller 0)
-            logger::_log "ERROR" "$* (caller: ${caller_info})"
+            _log "ERROR" "$* (caller: ${caller_info})"
         else
-            logger::_log "ERROR" "$*"
+            _log "ERROR" "$*"
         fi
     fi
 }
