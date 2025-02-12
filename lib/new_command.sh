@@ -118,7 +118,7 @@ new_command::handle_new_command() {
     local project_dir
     project_dir=$(_create_project_folder "$template_key" "$path_flag")
 
-    # trap '_error_handler "$project_dir"' EXIT
+    trap '_error_handler ${BASH_LINENO[0]} "${project_dir:-}"' EXIT
 
     local templates_url
     templates_url=$(_get_templates_url "$template_key")
@@ -219,8 +219,10 @@ _download_templates() {
     local extracted_folder
     extracted_folder=$(find "$target_dir" -mindepth 1 -maxdepth 1 -type d | head -n 1)
     if [ -n "$extracted_folder" ]; then
+        shopt -s dotglob
         mv "$extracted_folder"/* "$target_dir"/
-        mv "$extracted_folder"/.* "$target_dir"/
+        shopt -u dotglob
+
         rm -rf "$extracted_folder"
     fi
 }
@@ -276,13 +278,14 @@ _create_new_project() {
             rm -f "$project_dir/create.sh"
         else
             logger::error "create.sh execution failed." >&2
-            _error_handler "$project_dir"
+            _error_handler ${BASH_LINENO[0]} "${project_dir:-}"
             exit 1
         fi
     else
         logger::warn "No create.sh found in $project_dir." >&2
         logger::error "${BINARY_NAME} expects a create.sh script to set up the project. Cleaning up..." >&2
-        _error_handler "$project_dir"
+
+        _error_handler ${BASH_LINENO[0]} "${project_dir:-}"
         exit 1
     fi
 
@@ -325,15 +328,20 @@ _cleanup_project() {
     rm -rf "$project_dir"
 }
 
+# ---------------------------------------------------------------------
+# Handles errors by logging the line number, function name, and project directory,
+# cleaning up the project directory, and exiting.
+#
+# Parameters:
+#   $1 - The line number where the error occurred.
+#   $2 - The project directory to clean up.
+# ---------------------------------------------------------------------
 _error_handler() {
-    # BASH_LINENO[0] is the line number of the command that failed.
-    # FUNCNAME[1] is the name of the function where the error occurred (or MAIN if not in a function).
-    local line_number="${BASH_LINENO[0]}"
+    local line_number="$1"
+    local project_dir="$2"
     local func="${FUNCNAME[1]:-MAIN}"
 
-    local project_dir="$1"
-
-    if [[ "${DEBUG}" == "true" ]]; then
+    if [[ "$LOG_LEVEL" -eq 4 ]]; then
         logger::error "An error occurred while executing function \"$func\" on line $line_number. Removing created project directory: $project_dir" >&2
     else
         logger::error "An error occurred. Removing created project directory: $project_dir" >&2
