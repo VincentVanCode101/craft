@@ -10,8 +10,8 @@
     - [x] add automatic shell checks
 
 - [ ] how to sem-ver?
-    - [x] how to check for new updates
-    - [x] how to prompt user to update repo (update script?)
+- [x] how to check for new updates
+- [x] how to prompt user to update repo (update script?)
 
 - [ ] provide standard flags (--version, --verbose, maybe --dry-run)
 
@@ -51,5 +51,14 @@ readonly EXIT_RUNTIME_ERROR=3
     - [ ] php symfony (HN?)
     - [ ] php laravel (HN?)
     - [ ] terraform
+
+- [ ] replace Make (&Makefile) in java templates with bash script
+
+- [ ] consider changing the project name because canonical has a program called craft-cli (could lead to confusion)
+
+- [ ] decide on: should all container just be named {something}-env || {someting}-compiler || {something}-runtime
+    - I'd prefer {something}-env
+        - e.g. against {something}-compiler -> node is not a compiler
+        - e.g. against {something}-runtime -> having clang or cpp installed in the dev container does not make it a runtime
 
 - [ ] complete TODOs

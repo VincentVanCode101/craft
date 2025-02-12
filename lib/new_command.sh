@@ -278,6 +278,12 @@ _create_new_project() {
             rm -f "$project_dir/create.sh"
         else
             logger::error "create.sh execution failed." >&2
+            # [ ] TODO: solve how this can be done more elegently...
+            # if I do not un-trap the EXIT, but still call the error_handler
+            # I get the last error message twice. But I need to call the
+            # error_handler manually for the correct line number of the
+            # error to be passed to it (so it appears correctly in the logs)
+            trap - EXIT
             _error_handler ${BASH_LINENO[0]} "${project_dir:-}"
             exit 1
         fi
@@ -285,6 +291,7 @@ _create_new_project() {
         logger::warn "No create.sh found in $project_dir." >&2
         logger::error "${BINARY_NAME} expects a create.sh script to set up the project. Cleaning up..." >&2
 
+        trap - EXIT
         _error_handler ${BASH_LINENO[0]} "${project_dir:-}"
         exit 1
     fi
