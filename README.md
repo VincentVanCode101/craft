@@ -12,7 +12,7 @@ The `Craft` CLI is a tool designed to simplify the process of bootstrapping new 
 - 🌐 **Multi-Language Support**: Works with Go, Java, and other supported languages.  
 - 🏎️ **Small and Fast**: A lightweight CLI tool designed for quick execution.  
 - 💡 **Efficient and Reliable**: Helps you start and maintain projects effortlessly.  
-- 🏗️ **Almost no dependecies**: Requires only docker, curl and unzip to build and run your projects. There's no need to install any other language runtimes, compilers, or frameworks locally.
+- 🏗️ **Almost no dependencies**: Requires only docker, curl and unzip to build and run your projects. There's no need to install any other language runtimes, compilers, or frameworks locally.
 
 See how `Craft` solves the [problems of other scaffolding tools](#️-problems-with-other-scaffolding-tools) where I explain how it addresses common pitfalls and inefficiencies.
 
@@ -101,9 +101,9 @@ craft new <language>
   - **`build`**: Provides an enhanced setup which may include additional tools like pre-commit hooks.
   - **`prod`**: Sets up a production-ready project with multi-stage Dockerfile builds and other production optimizations.
   - (If omitted, the default level is implicitly `dev`, which typically creates a basic development container providing only a minimal runtime environment.)
-- **`--quiet`**: To contoll verbosity of the output: only display error messages.
-- **`--verbose`**: To contoll verbosity of the output: enable verbose output (debug messages enabled).
-- **`--debug`**: To contoll verbosity of the output: enable super-debug mode (verbose output with shell tracing).
+- **`--quiet`**: To control verbosity of the output: only display error messages.
+- **`--verbose`**: To control verbosity of the output: enable verbose output (debug messages enabled).
+- **`--debug`**: To control verbosity of the output: enable super-debug mode (verbose output with shell tracing).
 - **`--show-dependencies`**: Show supported dependencies for the specified language.
 
 ---
@@ -114,6 +114,8 @@ craft new <language>
    ```bash
    craft -h
    ```
+   ![craft --help example](./assets/craft_help_example.gif)
+
 
 2. **Display help for the `new` command:**
    ```bash
@@ -139,6 +141,7 @@ craft new <language>
    ```bash
    craft new java --dependencies=mariadb,ncurs --level=prod --path=~/projects/java_app
    ```
+   ![craft new java --dependencies=quarkus example](./assets/java_quarkus_example.gif)
 
 7. **Show supported dependencies for the Java language:**
    ```bash

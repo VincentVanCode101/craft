@@ -56,7 +56,7 @@ readonly EXIT_RUNTIME_ERROR=3
 
 - [ ] consider changing the project name because canonical has a program called craft-cli (could lead to confusion)
 
-- [ ] decide on: should all container just be named {something}-env || {someting}-compiler || {something}-runtime
+- [x] decide on: should all container just be named {something}-env || {someting}-compiler || {something}-runtime
     - I'd prefer {something}-env
         - e.g. against {something}-compiler -> node is not a compiler
         - e.g. against {something}-runtime -> having clang or cpp installed in the dev container does not make it a runtime
