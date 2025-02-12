@@ -31,7 +31,7 @@ readonly EXIT_RUNTIME_ERROR=3
 - [x] contemplate if I should TODOs regarding templates in the templates repo (I should due to the fact they are actually separate from one another, but I do not want to commit to two repos as long as I am the only contributer to both)
 
 - [ ] add template support for:
-    - [ ] java quarkus
+    - [x] java quarkus
     - [ ] java quarkus jaeger
     - [ ] java quarkus OTEL-lgtm
     - [ ] java build
