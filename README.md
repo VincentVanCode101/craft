@@ -33,7 +33,8 @@ See how `Craft` solves the [problems of other scaffolding tools](#️-problems-w
 - [License](#license)
 
 
----
+<br>
+
 ## ⚠️ Problems with Other Scaffolding Tools
 
 While exploring new languages or starting small projects, I encountered several issues with existing scaffolding tools:
@@ -46,7 +47,8 @@ While exploring new languages or starting small projects, I encountered several 
 These problems slow down productivity, create barriers for quickly experimenting with a new language or solving coding challenges, and result in projects that do not run in a containerized, isolated setup.
   - Running projects in Docker containers ensures consistency by providing a uniform environment across systems, eliminating 'it works on my machine' issues, isolating dependencies, and enabling easy cleanup or switching between projects without affecting the host system. ([see Docker](https://www.docker.com/))
 
----
+
+<br>
 
 ## 🛠️ Why Use Craft?
 
@@ -55,6 +57,8 @@ These problems slow down productivity, create barriers for quickly experimenting
 - **Multi-Language Support**: Works seamlessly across multiple languages, making it versatile for various tasks.
 - **Minimal Setup**: Generates only the essential files needed to start coding, with the option to create more complex setups if you’re familiar with the language. This allows you to build and structure your project the way you want.
 - **Beginner-Friendly**: Focuses on simplicity and clarity, giving you exactly what you need to get started with a new language or task.
+
+<br>
 
 ## ✨Features
 
@@ -66,7 +70,7 @@ These problems slow down productivity, create barriers for quickly experimenting
 - **Docker-Ready**:
   - Generated and updated projects are pre-configured to run in Docker containers.
 
----
+<br>
 
 ## 📥 Installation
 
@@ -82,8 +86,8 @@ These problems slow down productivity, create barriers for quickly experimenting
    ```
   - Linux: the binary is automatically added to `/usr/local/bin/craft`
   - MacOS: the binary is automatically added to `/opt/homebrew/bin/craft`
----
 
+<br>
 
 ## 💻 Command Line Usage
 
@@ -148,91 +152,36 @@ craft new <language>
    craft new java --show-dependencies
    ```
 
----
+<br>
+
 ## Dependencies
 - [Docker](https://www.docker.com/)
 - [Curl](https://wiki.ubuntuusers.de/cURL/)
 - [Unzip](https://www.tecmint.com/install-zip-and-unzip-in-linux/)
 
 
-# 🌐Supported Languages
+<br>
 
-<h2 style="display: flex; align-items: center; gap: 10px; font-size: 2rem; font-weight: bold; line-height: 1;">
-  Go <img src="./assets/gopher.png" alt="Go Logo" style="height: 2rem;"/>
-</h2>
+# 🌐 Supported Languages
 
-<details>
-<summary>more</summary>
+<p style="display: flex; align-items: center; gap: 10px; font-size: 2rem; line-height: 1;">
+  - Go <img src="./assets/gopher.png" alt="Go Logo" style="height: 2rem;"/>
+</p>
 
-#### Allowed Operations:
-  - `new`: Create a new Go project ([Documentation](./docs/go.md)).
-  
-#### **Examples**:
-1. Create a new Go project with the name `my-go-project`:
-   ```bash
-   craft new go --path=my-go-project
-   ```
+<p style="display: flex; align-items: center; gap: 10px; font-size: 2rem; line-height: 1;">
+  - Java <img src="./assets/java.svg" alt="Go Logo" style="height: 2rem;"/>
+</p>
 
-2. Create a new Go project with the dependency `ncurses`:
-   ```bash
-   craft new go --path=my-go-project --dependencies=ncurses
-   ```
+<p style="display: flex; align-items: center; gap: 10px; font-size: 2rem; line-height: 1;">
+  - Rust <img src="./assets/rust_crab.png" alt="Rust Crab Logo" style="height: 2rem;"/>
+</p>
 
-
-</details>
-
-<h2 style="display: flex; align-items: center; gap: 10px; font-size: 2rem; font-weight: bold; line-height: 1;">
-  Java <img src="./assets/java.svg" alt="Go Logo" style="height: 2rem;"/>
-</h2>
-
-<details>
-<summary>more</summary>
-
-- **Allowed Build Tools and Frameworks**:
-  - **Maven**:
-    - `default`: Create a Java projects without any specific dependencies will setup a plain java project with maven as the build tool. ([Documentation](./docs/java-maven-default.md))
-
-    **Example**:
-   Create a new Java project using Maven:
-    ```bash
-    craft new java
-    ```
-    - `quarkus`: Create a Java projects with the Quarkus framework. ([Documentation](./docs/java-quarkus.md))
-
-    **Example**:
-   Create a new Quarkus-Java project using Maven:
-    ```bash
-    craft new java --dependencies=quarkus
-    ```
-    - `springboot`: Coming soon...
-
-
-</details>
-
-<h2 style="display: flex; align-items: center; gap: 10px; font-size: 2rem; font-weight: bold; line-height: 1;">
-  Rust <img src="./assets/rust-crab.png" alt="Rust Crab Logo" style="height: 2rem;"/>
-</h2>
-
-<details>
-<summary>more</summary>
-
-#### Allowed Operations:
-  - `new`: Create a new Rust project ([Documentation](./docs/rust.md)).
-  
-#### **Examples**:
-1. Create a new Rust project with the name `my-rust-project`:
-   ```bash
-   craft new rust --path=my-rust-project
-   ```
-
-</details>
-
-
----
+<br>
 
 # Craft Templates Configuration and Contribution Guide
----
 ## For Contributors to the Official Craft Templates Repository
+
+<br>
 
 The official Craft Templates repository is located at:  
 [https://github.com/VincentVanCode101/craft-templates](https://github.com/VincentVanCode101/craft-templates)
@@ -246,6 +195,8 @@ Since Craft looks up the template archive URL by reading the environment variabl
 TEMPLATES_URL_go_prod_mariadb_ncurs="https://your.custom.domain/path/to/your/templates.zip"
 ```
 This setup gives you full flexibility to modify or redirect the source of template archives without changing any Craft code.
+
+<br>
 
 ## **📜License**
 
