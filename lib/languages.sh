@@ -8,7 +8,7 @@ JAVA_DEPENDENCIES=("quarkus")
 RUST_DEPENDENCIES=("")
 
 export ALLOWED_LEVELS_go=""
-export ALLOWED_LEVELS_java="foo"
+export ALLOWED_LEVELS_java=""
 export ALLOWED_LEVELS_rust=""
 
 # -----------------------------------------------------------------------------
