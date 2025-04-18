@@ -1,16 +1,19 @@
 #!/usr/bin/env bash
 # languages.sh
 
-export AVAILABLE_LANGUAGES=("go" "java" "rust")
+export AVAILABLE_LANGUAGES=("go" "java" "rust" "php", "r")
 
 GO_DEPENDENCIES=("")
 JAVA_DEPENDENCIES=("quarkus")
 RUST_DEPENDENCIES=("")
+PHP_DEPENDENCIES=("symfony")
+R_DEPENDENCIES=("")
 
 export ALLOWED_LEVELS_go=""
 export ALLOWED_LEVELS_java=""
 export ALLOWED_LEVELS_rust=""
-
+export ALLOWED_LEVELS_php=""
+export ALLOWED_LEVELS_=""
 # -----------------------------------------------------------------------------
 # ---------------------------- LANGUAGES --------------------------------------
 # -----------------------------------------------------------------------------
@@ -50,6 +53,8 @@ languages::get_allowed_dependencies() {
     go) echo "${GO_DEPENDENCIES[*]}" ;;
     java) echo "${JAVA_DEPENDENCIES[*]}" ;;
     rust) echo "${RUST_DEPENDENCIES[*]}" ;;
+    php) echo "${PHP_DEPENDENCIES[*]}" ;;
+    r) echo "${PHP_DEPENDENCIES[*]}" ;;
     *) echo "" ;;
     esac
 }
@@ -94,7 +99,12 @@ languages::get_allowed_levels() {
     local lang
     lang=$(echo "$1" | tr '[:upper:]' '[:lower:]')
     local var_name="ALLOWED_LEVELS_${lang}"
-    echo "${!var_name}"
+
+    if [[ -v $var_name ]]; then
+        echo "${!var_name}"
+    else
+        echo ""
+    fi
 }
 
 languages::validate_level() {
