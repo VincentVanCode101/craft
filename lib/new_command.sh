@@ -112,8 +112,7 @@ new_command::handle_new_command() {
 
     local project_dir
     project_dir=$(_create_project_folder "$template_key" "$path_flag")
-
-    trap '_error_handler ${BASH_LINENO[0]} "${project_dir:-}"' EXIT
+    trap "_error_handler ${BASH_LINENO[0]} '${project_dir:-}'" EXIT
 
     local templates_url
     templates_url=$(_get_templates_url "$template_key")
