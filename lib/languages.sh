@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # languages.sh
 
-export AVAILABLE_LANGUAGES=("go" "java" "rust" "php", "r")
+export AVAILABLE_LANGUAGES=("go" "java" "rust" "php" "r")
 
 GO_DEPENDENCIES=("")
 JAVA_DEPENDENCIES=("quarkus")
