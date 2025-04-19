@@ -158,6 +158,7 @@ craft new <language>
 - [Docker](https://www.docker.com/)
 - [Curl](https://wiki.ubuntuusers.de/cURL/)
 - [Unzip](https://www.tecmint.com/install-zip-and-unzip-in-linux/)
+- Linux/MacOs (no support for windows)
 
 
 <br>
