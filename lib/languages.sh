@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
 # languages.sh
 
-export AVAILABLE_LANGUAGES=("go" "java" "rust" "php" "r")
+export AVAILABLE_LANGUAGES=("go" "java" "rust" "php" "r" "python")
 
 GO_DEPENDENCIES=("")
 JAVA_DEPENDENCIES=("quarkus")
 RUST_DEPENDENCIES=("")
 PHP_DEPENDENCIES=("symfony")
 R_DEPENDENCIES=("")
+PYTHON_DEPENDENCIES=("")
 
 export ALLOWED_LEVELS_go=""
+export ALLOWED_LEVELS_python=""
+export ALLOWED_LEVELS_r=""
 export ALLOWED_LEVELS_java=""
 export ALLOWED_LEVELS_rust=""
 export ALLOWED_LEVELS_php=""

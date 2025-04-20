@@ -177,6 +177,13 @@ craft new <language>
   - Rust <img src="./assets/rust_crab.png" alt="Rust Crab Logo" style="height: 2rem;"/>
 </p>
 
+<p style="display: flex; align-items: center; gap: 10px; font-size: 2rem; line-height: 1;">
+  - Python
+</p>
+
+<p style="display: flex; align-items: center; gap: 10px; font-size: 2rem; line-height: 1;">
+  - R
+</p>
 <br>
 
 # Craft Templates Configuration and Contribution Guide
