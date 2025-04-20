@@ -44,13 +44,13 @@ readonly EXIT_RUNTIME_ERROR=3
     - [ ] javascript with vuejs
     - [ ] typescript (ESA?)
     - [ ] java with spring (ESA?, PFH?)
-    - [ ] python (JL?)
+    - [x] python (JL?) (does this need improvements?)
     - [ ] ansible
     - [ ] c (ESA?)
     - [ ] c++
     - [ ] c++ with ncurses
     - [ ] php (HN?)
-    - [ ] php with symfony (HN?)
+    - [x] php with symfony (HN?) (double check again)
     - [ ] php with laravel (HN?)
     - [ ] terraform
 
@@ -62,6 +62,7 @@ readonly EXIT_RUNTIME_ERROR=3
     - I'd prefer {something}-env
         - e.g. against {something}-compiler -> node is not a compiler
         - e.g. against {something}-runtime -> having clang or cpp installed in the dev container does not make it a runtime
+- [ ] do not pass the project name into the docker-service... remove "container_name" attribute in compose.. *sigghh*
 
 - [ ] stop commiting to main
 
