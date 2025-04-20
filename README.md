@@ -184,6 +184,10 @@ craft new <language>
 <p style="display: flex; align-items: center; gap: 10px; font-size: 2rem; line-height: 1;">
   - R
 </p>
+
+<p style="display: flex; align-items: center; gap: 10px; font-size: 2rem; line-height: 1;">
+  - C#
+</p>
 <br>
 
 # Craft Templates Configuration and Contribution Guide
