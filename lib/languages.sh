@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # languages.sh
 
-export AVAILABLE_LANGUAGES=("go" "java" "rust" "php" "r" "python" "csharp")
+AVAILABLE_LANGUAGES=("go" "java" "rust" "php" "r" "python" "csharp")
 
 GO_DEPENDENCIES=("")
 JAVA_DEPENDENCIES=("quarkus")
@@ -18,7 +18,6 @@ export ALLOWED_LEVELS_java=""
 export ALLOWED_LEVELS_rust=""
 export ALLOWED_LEVELS_php=""
 export ALLOWED_LEVELS_csharp=""
-export ALLOWED_LEVELS_=""
 # -----------------------------------------------------------------------------
 # ---------------------------- LANGUAGES --------------------------------------
 # -----------------------------------------------------------------------------
@@ -105,7 +104,7 @@ languages::get_allowed_levels() {
     lang=$(echo "$1" | tr '[:upper:]' '[:lower:]')
     local var_name="ALLOWED_LEVELS_${lang}"
 
-    if [[ -v $var_name ]]; then
+    if [[ ${!var_name+x} ]]; then
         echo "${!var_name}"
     else
         echo ""
