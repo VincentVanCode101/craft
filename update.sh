@@ -82,7 +82,7 @@ _perform_update() {
             logger::error "Cannot change directory to ${repo_dir}"
             exit 1
         }
-        git pull || {
+        git pull -r origin $(git rev-parse --abbrev-ref HEAD) || {
             logger::error "Update failed. Please update manually."
             exit 1
         }
